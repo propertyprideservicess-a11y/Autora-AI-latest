@@ -1,1 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autora Dave — AI Chat + Scraper</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: #171a21;
+      --panel2: #1e2330;
+      --border: #2a3142;
+      --text: #e8eaed;
+      --muted: #9aa3b2;
+      --accent: #6ea8fe;
+      --accent2: #8b5cf6;
+      --good: #3ddc97;
+      --warn: #f5a524;
+      --bad: #ff6b6b;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #0b0d11, #12151c 40%, #0f1115);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+    .sidebar {
+      background: rgba(23,26,33,.95);
+      border-right: 1px solid var(--border);
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 1.15rem;
+      padding: 8px 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo span { color: var(--accent); }
+    .nav-btn, .ghost, button, select, input, textarea {
+      font: inherit;
+    }
+    .nav-btn {
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text);
+      padding: 12px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .nav-btn:hover { background: var(--panel2); }
+    .nav-btn.active {
+      background: linear-gradient(90deg, rgba(110,168,254,.15), rgba(139,92,246,.12));
+      border-color: rgba(110,168,254,.35);
+    }
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15,17,21,.7);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .pill strong { color: var(--text); }
+    .content {
+      padding: 18px;
+      flex: 1;
+      display: none;
+      min-height: 0;
+    }
+    .content.active { display: flex; flex-direction: column; gap: 14px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .grow { flex: 1; min-width: 180px; }
+    label { display: block; color: var(--muted); font-size: .86rem; margin-bottom: 6px; }
+    input, select, textarea {
+      width: 100%;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 11px 12px;
+      outline: none;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(110,168,254,.7);
+      box-shadow: 0 0 0 3px rgba(110,168,254,.12);
+    }
+    button {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button.secondary {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    button.danger { background: linear-gradient(135deg, #ff6b6b, #d9485f); }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    .chat-wrap {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 12px;
+      height: calc(100vh - 110px);
+    }
+    .messages {
+      overflow: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(0,0,0,.16);
+    }
+    .msg {
+      max-width: min(900px, 92%);
+      padding: 12px 14px;
+      border-radius: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border: 1px solid var(--border);
+    }
+    .msg.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, rgba(110,168,254,.18), rgba(139,92,246,.14));
+    }
+    .msg.assistant {
+      align-self: flex-start;
+      background: var(--panel);
+    }
+    .msg .meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: .78rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .composer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+    .hint { color: var(--muted); font-size: .9rem; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 420px;
+      overflow: auto;
+    }
+    .item {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .item h4 { margin: 0 0 4px; font-size: .95rem; }
+    .item p { margin: 0; color: var(--muted); font-size: .86rem; }
+    .tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .75rem;
+      margin-right: 4px;
+    }
+    .tag.light { color: var(--good); border-color: rgba(61,220,151,.35); }
+    .tag.medium { color: var(--warn); border-color: rgba(245,165,36,.35); }
+    .tag.heavy { color: #c4b5fd; border-color: rgba(139,92,246,.4); }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 10px;
+    }
+    .stat {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .stat .n { font-size: 1.2rem; font-weight: 800; }
+    .stat .l { color: var(--muted); font-size: .8rem; }
+    .switch {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+    }
+    @media (max-width: 920px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { flex-direction: row; overflow-x: auto; }
+      .grid-2, .stats { grid-template-columns: 1fr 1fr; }
+      .chat-wrap { height: calc(100vh - 180px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">🤖 Autora <span>Dave</span></div>
+      <button class="nav-btn active" data-tab="chat">💬 Chat</button>
+      <button class="nav-btn" data-tab="memories">🧠 Memories</button>
+      <button class="nav-btn" data-tab="scraper">🕷️ Scraper</button>
+      <button class="nav-btn" data-tab="models">🧬 Select AI</button>
+      <button class="nav-btn" data-tab="settings">⚙️ Settings</button>
+      <div style="flex:1"></div>
+      <div class="hint" style="padding:8px">
+        Auto-routing keeps most traffic on light models 💚
+      </div>
+    </aside>
 
+    <main class="main">
+      <div class="topbar">
+        <div class="pill">Model: <strong id="activeModelLabel">auto</strong></div>
+        <div class="pill">Tier: <strong id="activeTierLabel">light</strong></div>
+        <div class="pill">Usage today: <strong id="usageLabel">0</strong> msgs</div>
+      </div>
+
+      <!-- CHAT -->
+      <section id="chat" class="content active">
+        <div class="chat-wrap">
+          <div id="messages" class="messages"></div>
+          <div class="card">
+            <div class="composer">
+              <div>
+                <label>Message</label>
+                <textarea id="userInput" placeholder="Ask anything... easy stuff uses light models automatically ✨"></textarea>
+              </div>
+              <div class="row" style="flex-direction:column">
+                <button id="sendBtn">Send 🚀</button>
+                <button class="secondary" id="clearChatBtn">Clear chat</button>
+              </div>
+            </div>
+            <div class="hint" id="routeHint" style="margin-top:8px">Router ready.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MEMORIES -->
+      <section id="memories" class="content">
+        <div class="card">
+          <div class="row">
+            <div class="grow">
+              <label>Add memory</label>
+              <input id="memoryInput" placeholder="Important fact about user or project..." />
+            </div>
+            <button id="addMemoryBtn">Save 🧠</button>
+            <button class="secondary" id="clearMemoriesBtn">Clear all</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="row" style="justify-content:space-between">
+            <strong>Saved memories</strong>
+            <span class="hint">Injected into context when enabled in Settings</span>
+          </div>
+          <div id="memoryList" class="list" style="margin-top:10px"></div>
+        </div>
+      </section>
+
+      <!-- SCRAPER -->
+      <section id="scraper" class="content">
+        <div class="card">
+          <div class="grid-2">
+            <div>
+              <label>URL to scrape</label>
+              <input id="scrapeUrl" placeholder="https://example.com/page" />
+            </div>
+            <div>
+              <label>Mode</label>
+              <select id="scrapeMode">
+                <option value="text">Clean text</option>
+                <option value="raw">Raw HTML (trimmed)</option>
+              </select>
+            </div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <button id="scrapeBtn">Scrape 🕷️</button>
+            <button class="secondary" id="sendScrapeToChatBtn">Send result to chat</button>
+          </div>
+          <p class="hint">Browser-side fetch only works on CORS-friendly pages. For locked sites, paste text manually or use a proxy later.</p>
+          <label style="margin-top:10px">Scrape result</label>
+          <textarea id="scrapeOutput" style="min-height:260px" placeholder="Extracted content appears here..."></textarea>
+        </div>
+      </section>
+
+      <!-- SELECT AI -->
+      <section id="models" class="content">
+        <div class="card">
+          <div class="grid-2">
+            <div>
+              <label>Routing mode</label>
+              <select id="routingMode">
+                <option value="auto">Auto (recommended) — cheap by default</option>
+                <option value="manual">Manual override</option>
+              </select>
+            </div>
+            <div>
+              <label>Manual model</label>
+              <select id="manualModel"></select>
+            </div>
+          </div>
+          <p class="hint" style="margin-top:10px">
+            Easy question → light model · Hard/code/reasoning → stronger model. This protects your $30 plan margins 💰
+          </p>
+        </div>
+        <div class="card">
+          <strong>Model catalog (NoMask)</strong>
+          <div id="modelCatalog" class="list" style="margin-top:10px"></div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="settings" class="content">
+        <div class="stats">
+          <div class="stat"><div class="n" id="statMsgs">0</div><div class="l">Messages today</div></div>
+          <div class="stat"><div class="n" id="statLight">0</div><div class="l">Light routes</div></div>
+          <div class="stat"><div class="n" id="statMedium">0</div><div class="l">Medium routes</div></div>
+          <div class="stat"><div class="n" id="statHeavy">0</div><div class="l">Heavy routes</div></div>
+        </div>
+
+        <div class="card">
+          <div class="grid-2">
+            <div>
+              <label>NoMask API key</label>
+              <input id="apiKey" type="password" placeholder="Bearer key from API dashboard" />
+            </div>
+            <div>
+              <label>Base URL</label>
+              <input id="baseUrl" value="https://nomask.ai/api/v1" />
+            </div>
+            <div>
+              <label>Temperature</label>
+              <input id="temperature" type="number" min="0" max="2" step="0.1" value="0.7" />
+            </div>
+            <div>
+              <label>Max tokens</label>
+              <input id="maxTokens" type="number" min="64" max="8192" step="1" value="1024" />
+            </div>
+            <div>
+              <label>Daily message limit (per browser)</label>
+              <input id="dailyLimit" type="number" min="1" max="10000" value="200" />
+            </div>
+            <div>
+              <label>Memory limit (items)</label>
+              <input id="memoryLimit" type="number" min="0" max="100" value="20" />
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label>System prompt</label>
+            <textarea id="systemPrompt">You are Autora Dave, a sharp business + coding assistant. Be useful, direct, and concise unless detail is needed.</textarea>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <label class="switch"><input type="checkbox" id="useMemories" checked /> Use memories in chat</label>
+            <label class="switch"><input type="checkbox" id="streamOutput" /> Stream responses (best-effort)</label>
+            <label class="switch"><input type="checkbox" id="darkTheme" checked /> Dark theme</label>
+          </div>
+
+          <div class="row" style="margin-top:14px">
+            <button id="saveSettingsBtn">Save settings 💾</button>
+            <button class="secondary" id="exportBtn">Export data</button>
+            <button class="secondary" id="importBtn">Import data</button>
+            <button class="danger" id="resetBtn">Reset local data</button>
+          </div>
+          <input type="file" id="importFile" accept="application/json" hidden />
+          <p class="hint" style="margin-top:10px">
+            Get your key + fund prepaid balance in the <a href="/api/overview" style="color:var(--accent)">API dashboard</a> · Docs: <a href="/api/doc" style="color:var(--accent)">/api/doc</a>
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+/* =========================
+   NoMask model catalog
+   - Edit/add IDs to match your dashboard exactly
+   ========================= */
+const MODELS = [
+  // LIGHT / cheap / fast — default majority traffic
+  { id: 'deepseek-v4-flash', name: 'DeepSeek V4 Flash', tier: 'light', desc: 'Fast cheap default for easy questions' },
+  { id: 'deepseek-chat', name: 'DeepSeek Chat', tier: 'light', desc: 'Lightweight general chat' },
+  { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B Instant', tier: 'light', desc: 'Snappy simple Q&A' },
+  { id: 'qwen-2.5-7b-instruct', name: 'Qwen 2.5 7B', tier: 'light', desc: 'Efficient everyday tasks' },
+
+  // MEDIUM
+  { id: 'venice-uncensored-1.2', name: 'Venice Uncensored 1.2', tier: 'medium', desc: 'Balanced + freer style' },
+  { id: 'deepseek-v3', name: 'DeepSeek V3', tier: 'medium', desc: 'Stronger general reasoning' },
+  { id: 'llama-3.3-70b', name: 'Llama 3.3 70B', tier: 'medium', desc: 'Solid analysis & writing' },
+  { id: 'qwen-2.5-72b-instruct', name: 'Qwen 2.5 72B', tier: 'medium', desc: 'Good multilingual + coding help' },
+
+  // HEAVY / premium
+  { id: 'grok-4.5', name: 'Grok 4.5', tier: 'heavy', desc: 'Hard problems, coding, deep reasoning' },
+  { id: 'claude-4-sonnet', name: 'Claude 4 Sonnet', tier: 'heavy', desc: 'Premium quality long-form' },
+  { id: 'gpt-5', name: 'GPT-5', tier: 'heavy', desc: 'Top-tier complex tasks' },
+  { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', tier: 'heavy', desc: 'Long context / hard analysis' }
+];
+
+const DEFAULTS = {
+  apiKey: '',
+  baseUrl: 'https://nomask.ai/api/v1',
+  temperature: 0.7,
+  maxTokens: 1024,
+  dailyLimit: 200,
+  memoryLimit: 20,
+  systemPrompt: 'You are Autora Dave, a sharp business + coding assistant. Be useful, direct, and concise unless detail is needed.',
+  useMemories: true,
+  streamOutput: false,
+  darkTheme: true,
+  routingMode: 'auto',
+  manualModel: 'deepseek-v4-flash'
+};
+
+let state = loadState();
+
+function loadState() {
+  const raw = localStorage.getItem('autora_dave_state');
+  const base = {
+    settings: { ...DEFAULTS },
+    messages: [],
+    memories: [],
+    usage: { date: today(), msgs: 0, light: 0, medium: 0, heavy: 0 }
+  };
+  if (!raw) return base;
+  try {
+    const parsed = JSON.parse(raw);
+    return {
+      ...base,
+      ...parsed,
+      settings: { ...DEFAULTS, ...(parsed.settings || {}) },
+      usage: parsed.usage?.date === today() ? parsed.usage : base.usage
+    };
+  } catch {
+    return base;
+  }
+}
+function saveState() {
+  localStorage.setItem('autora_dave_state', JSON.stringify(state));
+}
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/* ========== UI wiring ========== */
+const $ = (id) => document.getElementById(id);
+const messagesEl = $('messages');
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    $(btn.dataset.tab).classList.add('active');
+  });
+});
+
+function populateModels() {
+  const manual = $('manualModel');
+  manual.innerHTML = '';
+  MODELS.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = `[${m.tier}] ${m.name} (${m.id})`;
+    manual.appendChild(opt);
+  });
+  manual.value = state.settings.manualModel;
+
+  const catalog = $('modelCatalog');
+  catalog.innerHTML = MODELS.map(m => `
+    <div class="item">
+      <h4>${m.name} <span class="tag ${m.tier}">${m.tier}</span></h4>
+      <p><code>${m.id}</code> — ${m.desc}</p>
+    </div>
+  `).join('');
+}
+
+function applySettingsToForm() {
+  const s = state.settings;
+  $('apiKey').value = s.apiKey || '';
+  $('baseUrl').value = s.baseUrl || DEFAULTS.baseUrl;
+  $('temperature').value = s.temperature;
+  $('maxTokens').value = s.maxTokens;
+  $('dailyLimit').value = s.dailyLimit;
+  $('memoryLimit').value = s.memoryLimit;
+  $('systemPrompt').value = s.systemPrompt;
+  $('useMemories').checked = !!s.useMemories;
+  $('streamOutput').checked = !!s.streamOutput;
+  $('darkTheme').checked = !!s.darkTheme;
+  $('routingMode').value = s.routingMode;
+  $('manualModel').value = s.manualModel;
+  updateTopbar('auto', 'light');
+  renderMessages();
+  renderMemories();
+  updateUsageUI();
+}
+
+function updateTopbar(model, tier) {
+  $('activeModelLabel').textContent = model;
+  $('activeTierLabel').textContent = tier;
+  $('usageLabel').textContent = state.usage.msgs;
+}
+
+function updateUsageUI() {
+  $('statMsgs').textContent = state.usage.msgs;
+  $('statLight').textContent = state.usage.light;
+  $('statMedium').textContent = state.usage.medium;
+  $('statHeavy').textContent = state.usage.heavy;
+  $('usageLabel').textContent = state.usage.msgs;
+}
+
+/* ========== Memories ========== */
+function renderMemories() {
+  const list = $('memoryList');
+  if (!state.memories.length) {
+    list.innerHTML = '<div class="hint">No memories yet.</div>';
+    return;
+  }
+  list.innerHTML = state.memories.map((m, i) => `
+    <div class="item">
+      <h4>#${i + 1}</h4>
+      <p>${escapeHtml(m)}</p>
+      <div class="row" style="margin-top:8px">
+        <button class="secondary" onclick="deleteMemory(${i})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+window.deleteMemory = (i) => {
+  state.memories.splice(i, 1);
+  saveState();
+  renderMemories();
+};
+$('addMemoryBtn').onclick = () => {
+  const v = $('memoryInput').value.trim();
+  if (!v) return;
+  state.memories.unshift(v);
+  state.memories = state.memories.slice(0, Number(state.settings.memoryLimit || 20));
+  $('memoryInput').value = '';
+  saveState();
+  renderMemories();
+};
+$('clearMemoriesBtn').onclick = () => {
+  if (confirm('Clear all memories?')) {
+    state.memories = [];
+    saveState();
+    renderMemories();
+  }
+};
+
+/* ========== Scraper ========== */
+$('scrapeBtn').onclick = async () => {
+  const url = $('scrapeUrl').value.trim();
+  if (!url) return alert('Enter a URL');
+  $('scrapeOutput').value = 'Scraping...';
+  try {
+    const res = await fetch(url);
+    const html = await res.text();
+    if ($('scrapeMode').value === 'raw') {
+      $('scrapeOutput').value = html.slice(0, 30000);
+    } else {
+      $('scrapeOutput').value = htmlToText(html).slice(0, 30000);
+    }
+  } catch (e) {
+    $('scrapeOutput').value = `Scrape failed (likely CORS): ${e.message}\n\nTip: paste content manually or host a small proxy later.`;
+  }
+};
+$('sendScrapeToChatBtn').onclick = () => {
+  const text = $('scrapeOutput').value.trim();
+  if (!text) return;
+  $('userInput').value = `Analyze this scraped content and extract the key points:\n\n${text.slice(0, 12000)}`;
+  document.querySelector('[data-tab="chat"]').click();
+};
+
+function htmlToText(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  ['script','style','noscript','iframe'].forEach(sel => doc.querySelectorAll(sel).forEach(n => n.remove()));
+  return (doc.body?.textContent || '').replace(/\s+/g, ' ').trim();
+}
+
+/* ========== Smart model router ========== */
+function classifyTier(prompt) {
+  const p = (prompt || '').toLowerCase();
+  const len = p.length;
+
+  const heavySignals = [
+    'write code', 'full code', 'refactor', 'architecture', 'debug this', 'stack trace',
+    'prove', 'reason step by step', 'complex', 'optimize algorithm', 'regex', 'sql query',
+    'design system', 'unit test', 'implement', 'deep analysis', 'compare tradeoffs',
+    'long-form', 'research', 'multi-step', 'build a', 'from scratch'
+  ];
+  const mediumSignals = [
+    'explain', 'summarize', 'analyse', 'analyze', 'rewrite', 'improve', 'plan',
+    'strategy', 'outline', 'scrape', 'compare', 'pros and cons', 'draft', 'email',
+    'business', 'marketing', 'how does', 'why does'
+  ];
+
+  if (heavySignals.some(s => p.includes(s)) || len > 1200 || /```/.test(prompt)) return 'heavy';
+  if (mediumSignals.some(s => p.includes(s)) || len > 280) return 'medium';
+
+  // short/easy
+  if (len < 140 && !/[?].*[?]/.test(p)) return 'light';
+  return 'light';
+}
+
+function pickModelForTier(tier) {
+  const pool = MODELS.filter(m => m.tier === tier);
+  // prefer first listed in that tier (you can reorder catalog to prioritize cheapest)
+  return pool[0] || MODELS[0];
+}
+
+function resolveModel(userText) {
+  if (state.settings.routingMode === 'manual') {
+    const m = MODELS.find(x => x.id === state.settings.manualModel) || MODELS[0];
+    return { model: m.id, tier: m.tier, reason: 'Manual override' };
+  }
+  const tier = classifyTier(userText);
+  const m = pickModelForTier(tier);
+  return { model: m.id, tier, reason: `Auto-routed to ${tier} based on question difficulty` };
+}
+
+/* ========== Chat ========== */
+function renderMessages() {
+  messagesEl.innerHTML = state.messages.map(m => `
+    <div class="msg ${m.role}">
+      <div class="meta">
+        <span>${m.role}</span>
+        ${m.model ? `<span class="tag ${m.tier || 'light'}">${m.model}</span>` : ''}
+        ${m.tier ? `<span class="tag ${m.tier}">${m.tier}</span>` : ''}
+      </div>
+      <div>${escapeHtml(m.content)}</div>
+    </div>
+  `).join('');
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function escapeHtml(str) {
+  return (str || '').replace(/[&<>"']/g, s => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[s]);
+}
+
+$('clearChatBtn').onclick = () => {
+  if (confirm('Clear chat history?')) {
+    state.messages = [];
+    saveState();
+    renderMessages();
+  }
+};
+
+$('sendBtn').onclick = sendMessage;
+$('userInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+async function sendMessage() {
+  const text = $('userInput').value.trim();
+  if (!text) return;
+
+  if (!state.settings.apiKey) {
+    alert('Add your NoMask API key in Settings first.');
+    document.querySelector('[data-tab="settings"]').click();
+    return;
+  }
+
+  if (state.usage.msgs >= Number(state.settings.dailyLimit || 200)) {
+    alert('Daily message limit reached. Raise it in Settings or wait until tomorrow.');
+    return;
+  }
+
+  const route = resolveModel(text);
+  updateTopbar(route.model, route.tier);
+  $('routeHint').textContent = `↪️ ${route.reason} · using ${route.model}`;
+
+  state.messages.push({ role: 'user', content: text });
+  $('userInput').value = '';
+  renderMessages();
+  saveState();
+
+  const assistantPlaceholder = { role: 'assistant', content: 'Thinking…', model: route.model, tier: route.tier };
+  state.messages.push(assistantPlaceholder);
+  renderMessages();
+
+  try {
+    const reply = await callNoMask(route.model, text);
+    assistantPlaceholder.content = reply;
+    state.usage.msgs += 1;
+    state.usage[route.tier] = (state.usage[route.tier] || 0) + 1;
+    updateUsageUI();
+    saveState();
+    renderMessages();
+  } catch (err) {
+    assistantPlaceholder.content = `⚠️ Error: ${err.message}`;
+    saveState();
+    renderMessages();
+  }
+}
+
+async function callNoMask(model, userText) {
+  const s = state.settings;
+  const msgs = [];
+
+  msgs.push({ role: 'system', content: s.systemPrompt || DEFAULTS.systemPrompt });
+
+  if (s.useMemories && state.memories.length) {
+    msgs.push({
+      role: 'system',
+      content: `Relevant memories:\n- ${state.memories.slice(0, s.memoryLimit).join('\n- ')}`
+    });
+  }
+
+  // last few turns for short context (keeps cost down)
+  const history = state.messages
+    .filter(m => m.role === 'user' || m.role === 'assistant')
+    .slice(-8)
+    .map(m => ({ role: m.role, content: m.content }));
+
+  // replace trailing placeholder assistant if present
+  while (history.length && history[history.length - 1].role === 'assistant' && history[history.length - 1].content === 'Thinking…') {
+    history.pop();
+  }
+
+  // ensure current user message is included once
+  if (!history.length || history[history.length - 1].content !== userText) {
+    history.push({ role: 'user', content: userText });
+  }
+
+  msgs.push(...history);
+
+  const endpoint = `${s.baseUrl.replace(/\/$/, '')}/chat/completions`;
+  const res = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${s.apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model,
+      messages: msgs,
+      temperature: Number(s.temperature),
+      max_tokens: Number(s.maxTokens)
+    })
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error?.message || data.message || `HTTP ${res.status}`);
+  }
+
+  const content = data.choices?.[0]?.message?.content
+    || data.choices?.[0]?.text
+    || data.output_text
+    || JSON.stringify(data);
+
+  return content;
+}
+
+/* ========== Settings ========== */
+$('saveSettingsBtn').onclick = () => {
+  state.settings = {
+    ...state.settings,
+    apiKey: $('apiKey').value.trim(),
+    baseUrl: $('baseUrl').value.trim() || DEFAULTS.baseUrl,
+    temperature: Number($('temperature').value),
+    maxTokens: Number($('maxTokens').value),
+    dailyLimit: Number($('dailyLimit').value),
+    memoryLimit: Number($('memoryLimit').value),
+    systemPrompt: $('systemPrompt').value,
+    useMemories: $('useMemories').checked,
+    streamOutput: $('streamOutput').checked,
+    darkTheme: $('darkTheme').checked,
+    routingMode: $('routingMode').value,
+    manualModel: $('manualModel').value
+  };
+  saveState();
+  alert('Settings saved ✅');
+};
+
+$('routingMode').onchange = () => {
+  state.settings.routingMode = $('routingMode').value;
+  saveState();
+};
+$('manualModel').onchange = () => {
+  state.settings.manualModel = $('manualModel').value;
+  saveState();
+  updateTopbar(state.settings.manualModel, (MODELS.find(m => m.id === state.settings.manualModel) || {}).tier || 'light');
+};
+
+$('exportBtn').onclick = () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `autora-dave-export-${today()}.json`;
+  a.click();
+};
+$('importBtn').onclick = () => $('importFile').click();
+$('importFile').onchange = async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    state = {
+      settings: { ...DEFAULTS, ...(parsed.settings || {}) },
+      messages: parsed.messages || [],
+      memories: parsed.memories || [],
+      usage: parsed.usage?.date === today() ? parsed.usage : { date: today(), msgs: 0, light: 0, medium: 0, heavy: 0 }
+    };
+    saveState();
+    applySettingsToForm();
+    alert('Import complete ✅');
+  } catch {
+    alert('Import failed');
+  }
+};
+$('resetBtn').onclick = () => {
+  if (confirm('Reset ALL local data?')) {
+    localStorage.removeItem('autora_dave_state');
+    state = loadState();
+    applySettingsToForm();
+  }
+};
+
+/* boot */
+populateModels();
+applySettingsToForm();
+</script>
+</body>
+</html>
