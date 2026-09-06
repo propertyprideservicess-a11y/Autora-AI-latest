@@ -1,892 +1,530 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Autora Dave — AI Chat + Scraper</title>
-  <style>
-    :root {
-      --bg: #0f1115;
-      --panel: #171a21;
-      --panel2: #1e2330;
-      --border: #2a3142;
-      --text: #e8eaed;
-      --muted: #9aa3b2;
-      --accent: #6ea8fe;
-      --accent2: #8b5cf6;
-      --good: #3ddc97;
-      --warn: #f5a524;
-      --bad: #ff6b6b;
-      --radius: 14px;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: linear-gradient(180deg, #0b0d11, #12151c 40%, #0f1115);
-      color: var(--text);
-      min-height: 100vh;
-    }
-    .app {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      min-height: 100vh;
-    }
-    .sidebar {
-      background: rgba(23,26,33,.95);
-      border-right: 1px solid var(--border);
-      padding: 18px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .logo {
-      font-weight: 800;
-      font-size: 1.15rem;
-      padding: 8px 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .logo span { color: var(--accent); }
-    .nav-btn, .ghost, button, select, input, textarea {
-      font: inherit;
-    }
-    .nav-btn {
-      text-align: left;
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text);
-      padding: 12px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .nav-btn:hover { background: var(--panel2); }
-    .nav-btn.active {
-      background: linear-gradient(90deg, rgba(110,168,254,.15), rgba(139,92,246,.12));
-      border-color: rgba(110,168,254,.35);
-    }
-    .main {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(15,17,21,.7);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 5;
-    }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      padding: 8px 12px;
-      border-radius: 999px;
-      color: var(--muted);
-      font-size: .92rem;
-    }
-    .pill strong { color: var(--text); }
-    .content {
-      padding: 18px;
-      flex: 1;
-      display: none;
-      min-height: 0;
-    }
-    .content.active { display: flex; flex-direction: column; gap: 14px; }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-    }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-    .grow { flex: 1; min-width: 180px; }
-    label { display: block; color: var(--muted); font-size: .86rem; margin-bottom: 6px; }
-    input, select, textarea {
-      width: 100%;
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 10px;
-      padding: 11px 12px;
-      outline: none;
-    }
-    textarea { min-height: 90px; resize: vertical; }
-    input:focus, select:focus, textarea:focus {
-      border-color: rgba(110,168,254,.7);
-      box-shadow: 0 0 0 3px rgba(110,168,254,.12);
-    }
-    button {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 11px 14px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    button.secondary {
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-    button.danger { background: linear-gradient(135deg, #ff6b6b, #d9485f); }
-    button:disabled { opacity: .55; cursor: not-allowed; }
-    .chat-wrap {
-      display: grid;
-      grid-template-rows: 1fr auto;
-      gap: 12px;
-      height: calc(100vh - 110px);
-    }
-    .messages {
-      overflow: auto;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: rgba(0,0,0,.16);
-    }
-    .msg {
-      max-width: min(900px, 92%);
-      padding: 12px 14px;
-      border-radius: 14px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      word-break: break-word;
-      border: 1px solid var(--border);
-    }
-    .msg.user {
-      align-self: flex-end;
-      background: linear-gradient(135deg, rgba(110,168,254,.18), rgba(139,92,246,.14));
-    }
-    .msg.assistant {
-      align-self: flex-start;
-      background: var(--panel);
-    }
-    .msg .meta {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      font-size: .78rem;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-    .composer {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: end;
-    }
-    .hint { color: var(--muted); font-size: .9rem; }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 420px;
-      overflow: auto;
-    }
-    .item {
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-    }
-    .item h4 { margin: 0 0 4px; font-size: .95rem; }
-    .item p { margin: 0; color: var(--muted); font-size: .86rem; }
-    .tag {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: .75rem;
-      margin-right: 4px;
-    }
-    .tag.light { color: var(--good); border-color: rgba(61,220,151,.35); }
-    .tag.medium { color: var(--warn); border-color: rgba(245,165,36,.35); }
-    .tag.heavy { color: #c4b5fd; border-color: rgba(139,92,246,.4); }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(120px, 1fr));
-      gap: 10px;
-    }
-    .stat {
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-    }
-    .stat .n { font-size: 1.2rem; font-weight: 800; }
-    .stat .l { color: var(--muted); font-size: .8rem; }
-    .switch {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text);
-    }
-    @media (max-width: 920px) {
-      .app { grid-template-columns: 1fr; }
-      .sidebar { flex-direction: row; overflow-x: auto; }
-      .grid-2, .stats { grid-template-columns: 1fr 1fr; }
-      .chat-wrap { height: calc(100vh - 180px); }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Autora — Your business, connected</title>
+<style>
+  :root {
+    --bg:#070b14; --panel:#0d1526; --panel2:#121c31; --line:#22304d;
+    --text:#e8eefc; --muted:#9fb0d0; --accent:#6ea8ff; --accent2:#8b5cff;
+    --good:#3ddc97; --warn:#ffcc66; --bad:#ff6b8a; --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:radial-gradient(1200px 600px at 20% -10%, #1a1040 0%, transparent 50%),
+               radial-gradient(900px 500px at 100% 0%, #0b2a4a 0%, transparent 40%),
+               var(--bg);
+    color:var(--text);
+  }
+  .app{max-width:1200px;margin:0 auto;padding:20px}
+  .nav{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800}
+  .brand h1{font-size:18px;margin:0}
+  .brand p{margin:0;color:var(--muted);font-size:12px}
+  .nav-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .tab-btn,.btn{
+    border:1px solid var(--line); background:var(--panel); color:var(--text);
+    padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600;
+  }
+  .tab-btn.active,.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2)); border-color:transparent}
+  .btn.good{background:rgba(61,220,151,.12); border-color:rgba(61,220,151,.35); color:#b9ffe0}
+  .btn:disabled{opacity:.5; cursor:not-allowed}
+  .hero,.panel{background:rgba(13,21,38,.9); border:1px solid var(--line); border-radius:var(--radius); padding:22px; box-shadow:0 10px 40px rgba(0,0,0,.25)}
+  .hero h2{font-size:clamp(28px,5vw,44px); line-height:1.08; margin:0 0 12px}
+  .hero .lead{font-size:16px; color:var(--muted); line-height:1.6; max-width:900px}
+  .hero .points{display:grid; gap:8px; margin:16px 0 18px; color:#d5e0f7}
+  .cta-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+  .pill{display:inline-flex; gap:8px; align-items:center; padding:8px 12px; border-radius:999px; background:rgba(110,168,255,.08); border:1px solid rgba(110,168,255,.25); color:#cfe2ff; font-size:13px}
+  .grid{display:grid; grid-template-columns:2fr 1fr; gap:16px}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}}
+  .hidden{display:none !important}
+  .chat{display:flex; flex-direction:column; height:min(70vh,720px)}
+  .msgs{flex:1; overflow:auto; display:flex; flex-direction:column; gap:12px; padding-right:4px}
+  .msg{padding:12px 14px; border-radius:14px; max-width:90%; line-height:1.5; white-space:pre-wrap}
+  .msg.user{align-self:flex-end; background:#1a2744}
+  .msg.bot{align-self:flex-start; background:#121b2f; border:1px solid var(--line)}
+  .composer{display:flex; gap:8px; margin-top:12px}
+  .composer input, input, select, textarea{
+    width:100%; background:var(--panel2); border:1px solid var(--line); color:var(--text);
+    border-radius:12px; padding:12px 14px; outline:none;
+  }
+  .side .stat{padding:12px; border:1px solid var(--line); border-radius:14px; background:var(--panel2); margin-bottom:10px}
+  .stat b{display:block; font-size:18px; margin-top:4px}
+  .muted{color:var(--muted)}
+  .price-grid, .connect-grid, .method-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px}
+  .card{border:1px solid var(--line); background:var(--panel2); border-radius:16px; padding:14px}
+  .card h3{margin:0 0 6px; font-size:16px}
+  .card .price{font-size:28px; font-weight:800; margin:8px 0}
+  .methods li{margin:6px 0}
+  .banner{padding:10px 12px; border-radius:12px; background:rgba(255,204,102,.08); border:1px solid rgba(255,204,102,.25); color:#ffe2a8; margin-bottom:12px}
+  .ok{background:rgba(61,220,151,.08); border-color:rgba(61,220,151,.25); color:#bfffe0}
+  .bad{background:rgba(255,107,138,.08); border-color:rgba(255,107,138,.25); color:#ffd0da}
+  .footer{opacity:.7; font-size:12px; margin-top:18px; text-align:center}
+  label{display:block; font-size:13px; color:var(--muted); margin:10px 0 6px}
+  ol{margin:8px 0 0 18px; color:#dbe6ff}
+</style>
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="logo">🤖 Autora <span>Dave</span></div>
-      <button class="nav-btn active" data-tab="chat">💬 Chat</button>
-      <button class="nav-btn" data-tab="memories">🧠 Memories</button>
-      <button class="nav-btn" data-tab="scraper">🕷️ Scraper</button>
-      <button class="nav-btn" data-tab="models">🧬 Select AI</button>
-      <button class="nav-btn" data-tab="settings">⚙️ Settings</button>
-      <div style="flex:1"></div>
-      <div class="hint" style="padding:8px">
-        Auto-routing keeps most traffic on light models 💚
+<div class="app">
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">A</div>
+      <div>
+        <h1>Autora</h1>
+        <p>Business. Connected. From your phone.</p>
       </div>
-    </aside>
-
-    <main class="main">
-      <div class="topbar">
-        <div class="pill">Model: <strong id="activeModelLabel">auto</strong></div>
-        <div class="pill">Tier: <strong id="activeTierLabel">light</strong></div>
-        <div class="pill">Usage today: <strong id="usageLabel">0</strong> msgs</div>
-      </div>
-
-      <!-- CHAT -->
-      <section id="chat" class="content active">
-        <div class="chat-wrap">
-          <div id="messages" class="messages"></div>
-          <div class="card">
-            <div class="composer">
-              <div>
-                <label>Message</label>
-                <textarea id="userInput" placeholder="Ask anything... easy stuff uses light models automatically ✨"></textarea>
-              </div>
-              <div class="row" style="flex-direction:column">
-                <button id="sendBtn">Send 🚀</button>
-                <button class="secondary" id="clearChatBtn">Clear chat</button>
-              </div>
-            </div>
-            <div class="hint" id="routeHint" style="margin-top:8px">Router ready.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- MEMORIES -->
-      <section id="memories" class="content">
-        <div class="card">
-          <div class="row">
-            <div class="grow">
-              <label>Add memory</label>
-              <input id="memoryInput" placeholder="Important fact about user or project..." />
-            </div>
-            <button id="addMemoryBtn">Save 🧠</button>
-            <button class="secondary" id="clearMemoriesBtn">Clear all</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="row" style="justify-content:space-between">
-            <strong>Saved memories</strong>
-            <span class="hint">Injected into context when enabled in Settings</span>
-          </div>
-          <div id="memoryList" class="list" style="margin-top:10px"></div>
-        </div>
-      </section>
-
-      <!-- SCRAPER -->
-      <section id="scraper" class="content">
-        <div class="card">
-          <div class="grid-2">
-            <div>
-              <label>URL to scrape</label>
-              <input id="scrapeUrl" placeholder="https://example.com/page" />
-            </div>
-            <div>
-              <label>Mode</label>
-              <select id="scrapeMode">
-                <option value="text">Clean text</option>
-                <option value="raw">Raw HTML (trimmed)</option>
-              </select>
-            </div>
-          </div>
-          <div class="row" style="margin-top:10px">
-            <button id="scrapeBtn">Scrape 🕷️</button>
-            <button class="secondary" id="sendScrapeToChatBtn">Send result to chat</button>
-          </div>
-          <p class="hint">Browser-side fetch only works on CORS-friendly pages. For locked sites, paste text manually or use a proxy later.</p>
-          <label style="margin-top:10px">Scrape result</label>
-          <textarea id="scrapeOutput" style="min-height:260px" placeholder="Extracted content appears here..."></textarea>
-        </div>
-      </section>
-
-      <!-- SELECT AI -->
-      <section id="models" class="content">
-        <div class="card">
-          <div class="grid-2">
-            <div>
-              <label>Routing mode</label>
-              <select id="routingMode">
-                <option value="auto">Auto (recommended) — cheap by default</option>
-                <option value="manual">Manual override</option>
-              </select>
-            </div>
-            <div>
-              <label>Manual model</label>
-              <select id="manualModel"></select>
-            </div>
-          </div>
-          <p class="hint" style="margin-top:10px">
-            Easy question → light model · Hard/code/reasoning → stronger model. This protects your $30 plan margins 💰
-          </p>
-        </div>
-        <div class="card">
-          <strong>Model catalog (NoMask)</strong>
-          <div id="modelCatalog" class="list" style="margin-top:10px"></div>
-        </div>
-      </section>
-
-      <!-- SETTINGS -->
-      <section id="settings" class="content">
-        <div class="stats">
-          <div class="stat"><div class="n" id="statMsgs">0</div><div class="l">Messages today</div></div>
-          <div class="stat"><div class="n" id="statLight">0</div><div class="l">Light routes</div></div>
-          <div class="stat"><div class="n" id="statMedium">0</div><div class="l">Medium routes</div></div>
-          <div class="stat"><div class="n" id="statHeavy">0</div><div class="l">Heavy routes</div></div>
-        </div>
-
-        <div class="card">
-          <div class="grid-2">
-            <div>
-              <label>NoMask API key</label>
-              <input id="apiKey" type="password" placeholder="Bearer key from API dashboard" />
-            </div>
-            <div>
-              <label>Base URL</label>
-              <input id="baseUrl" value="https://nomask.ai/api/v1" />
-            </div>
-            <div>
-              <label>Temperature</label>
-              <input id="temperature" type="number" min="0" max="2" step="0.1" value="0.7" />
-            </div>
-            <div>
-              <label>Max tokens</label>
-              <input id="maxTokens" type="number" min="64" max="8192" step="1" value="1024" />
-            </div>
-            <div>
-              <label>Daily message limit (per browser)</label>
-              <input id="dailyLimit" type="number" min="1" max="10000" value="200" />
-            </div>
-            <div>
-              <label>Memory limit (items)</label>
-              <input id="memoryLimit" type="number" min="0" max="100" value="20" />
-            </div>
-          </div>
-
-          <div style="margin-top:12px">
-            <label>System prompt</label>
-            <textarea id="systemPrompt">You are Autora Dave, a sharp business + coding assistant. Be useful, direct, and concise unless detail is needed.</textarea>
-          </div>
-
-          <div class="row" style="margin-top:12px">
-            <label class="switch"><input type="checkbox" id="useMemories" checked /> Use memories in chat</label>
-            <label class="switch"><input type="checkbox" id="streamOutput" /> Stream responses (best-effort)</label>
-            <label class="switch"><input type="checkbox" id="darkTheme" checked /> Dark theme</label>
-          </div>
-
-          <div class="row" style="margin-top:14px">
-            <button id="saveSettingsBtn">Save settings 💾</button>
-            <button class="secondary" id="exportBtn">Export data</button>
-            <button class="secondary" id="importBtn">Import data</button>
-            <button class="danger" id="resetBtn">Reset local data</button>
-          </div>
-          <input type="file" id="importFile" accept="application/json" hidden />
-          <p class="hint" style="margin-top:10px">
-            Get your key + fund prepaid balance in the <a href="/api/overview" style="color:var(--accent)">API dashboard</a> · Docs: <a href="/api/doc" style="color:var(--accent)">/api/doc</a>
-          </p>
-        </div>
-      </section>
-    </main>
+    </div>
+    <div class="nav-actions">
+      <button class="tab-btn active" data-tab="home">Home</button>
+      <button class="tab-btn" data-tab="chat">Chat</button>
+      <button class="tab-btn" data-tab="connect">Connection</button>
+      <button class="tab-btn" data-tab="scrape">Scraper</button>
+      <button class="tab-btn" data-tab="pricing">Pricing</button>
+      <button class="tab-btn" data-tab="settings">Settings</button>
+    </div>
   </div>
 
+  <!-- HOME -->
+  <section id="tab-home" class="hero">
+    <span class="pill">✨ 6 hours free · 25 free scrapes · fingerprint-locked trial</span>
+    <h2>It isn't just a chat. It's your business, connected.</h2>
+    <div class="lead">
+      Autora connects your phone directly to your laptop, computer, or server through a powerful conversational interface.
+      <br><br>
+      But Autora doesn't just send messages.
+      <br><br>
+      It can interact with your system, execute tasks, run commands, access your tools, and help you operate your computer or server — all from your phone.
+      <br><br>
+      Whether you're managing a business system, monitoring a server, running processes, or getting work done remotely, Autora puts control in the palm of your hand.
+    </div>
+    <div class="points">
+      <div>📱 Phone → 💻 laptop / PC / server via your Autora backend</div>
+      <div>🔐 API key stays on your Linux backend (not in the website file)</div>
+      <div>🔌 Connection tab for Windows, macOS, Linux, iOS, Android, Servers</div>
+      <div>🕸️ Top-10 scraper with rotating proxy support + metered credits</div>
+    </div>
+    <div class="cta-row">
+      <button class="btn primary" id="chatNowBtn">Chat now — start 6h free</button>
+      <button class="btn" data-goto="pricing">See pricing</button>
+      <span class="pill" id="homeStatus">Not activated</span>
+    </div>
+  </section>
+
+  <!-- CHAT -->
+  <section id="tab-chat" class="hidden">
+    <div class="grid">
+      <div class="panel chat">
+        <div id="trialBanner" class="banner">Activate free trial with email to chat.</div>
+        <div class="msgs" id="msgs"></div>
+        <div class="composer">
+          <input id="chatInput" placeholder="Ask Autora to help operate your business systems..." />
+          <button class="btn primary" id="sendBtn">Send</button>
+        </div>
+      </div>
+      <div class="panel side">
+        <div class="stat"><span class="muted">Plan</span><b id="statPlan">—</b></div>
+        <div class="stat"><span class="muted">Trial time left</span><b id="statTime">—</b></div>
+        <div class="stat"><span class="muted">Chat left</span><b id="statChat">—</b></div>
+        <div class="stat"><span class="muted">Scrapes left</span><b id="statScrape">—</b></div>
+        <button class="btn good" style="width:100%" data-goto="connect">Open Connection tab</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONNECT -->
+  <section id="tab-connect" class="panel hidden">
+    <h2>🔌 Connection Center</h2>
+    <p class="muted">Choose a computer type and connection method. Only use on devices you own or are authorized to manage.</p>
+    <div class="connect-grid" style="margin-top:12px">
+      <div class="card" data-platform="windows"><h3>🪟 Windows</h3><p class="muted">Microsoft PCs & servers</p></div>
+      <div class="card" data-platform="macos"><h3>🍎 Apple macOS</h3><p class="muted">MacBook / Mac mini / iMac</p></div>
+      <div class="card" data-platform="linux"><h3>🐧 Linux</h3><p class="muted">Ubuntu, Kali, Debian...</p></div>
+      <div class="card" data-platform="ios"><h3>📱 iPhone / iPad</h3><p class="muted">Guided / MDM</p></div>
+      <div class="card" data-platform="android"><h3>🤖 Android</h3><p class="muted">Guided / advanced</p></div>
+      <div class="card" data-platform="server"><h3>🖥️ Server / VPS</h3><p class="muted">SSH & tunnels</p></div>
+    </div>
+
+    <div id="methodBox" class="hidden" style="margin-top:16px">
+      <h3 id="methodTitle">Methods</h3>
+      <div class="method-grid" id="methodGrid"></div>
+      <div class="card" style="margin-top:12px">
+        <h3>Setup instructions</h3>
+        <ol id="stepsList"></ol>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <h3>Save device profile</h3>
+        <label>Device name</label>
+        <input id="devName" placeholder="Office laptop" />
+        <label>Host (for SSH/RDP)</label>
+        <input id="devHost" placeholder="100.x.x.x or server.com" />
+        <label>Port</label>
+        <input id="devPort" placeholder="22" />
+        <label>Username</label>
+        <input id="devUser" placeholder="ubuntu" />
+        <label>Notes</label>
+        <textarea id="devNotes" rows="3" placeholder="VPN required, allowlist only, etc."></textarea>
+        <div class="cta-row" style="margin-top:12px">
+          <button class="btn primary" id="saveDeviceBtn">Save device</button>
+          <button class="btn" id="testSshBtn">Test SSH (uptime)</button>
+        </div>
+        <label>SSH private key for this test only (not stored in backend DB)</label>
+        <textarea id="sshKey" rows="4" placeholder="-----BEGIN OPENSSH PRIVATE KEY-----"></textarea>
+        <pre id="connectOut" class="muted" style="white-space:pre-wrap"></pre>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h3>Your devices</h3>
+      <div id="deviceList" class="muted">Activate trial to load devices.</div>
+    </div>
+  </section>
+
+  <!-- SCRAPE -->
+  <section id="tab-scrape" class="panel hidden">
+    <h2>🕸️ Scraper</h2>
+    <p class="muted">Top 10 sites research scraper. Uses backend + rotating proxies if configured. Metered credits.</p>
+    <label>Optional keyword filter</label>
+    <input id="scrapeQuery" placeholder="AI, markets, security..." />
+    <label>Sites (1-10)</label>
+    <input id="scrapeLimit" type="number" min="1" max="10" value="10" />
+    <div class="cta-row" style="margin-top:12px">
+      <button class="btn primary" id="scrapeBtn">Run top 10 scrape</button>
+      <span class="pill" id="scrapeStatus">25 free scrapes on trial</span>
+    </div>
+    <pre id="scrapeOut" style="margin-top:14px; white-space:pre-wrap; background:#0a1220; padding:12px; border-radius:12px; border:1px solid var(--line);"></pre>
+  </section>
+
+  <!-- PRICING -->
+  <section id="tab-pricing" class="panel hidden">
+    <h2>💰 Pricing</h2>
+    <p class="muted">Trial is fingerprint-locked. Scrapes and chat are metered so margins stay healthy.</p>
+    <div class="price-grid" style="margin-top:14px">
+      <div class="card">
+        <h3>Trial</h3>
+        <div class="price">$0</div>
+        <p>6 hours free<br>80 chat turns<br>25 scrapes<br>1 device profile</p>
+        <button class="btn primary" id="pricingTrialBtn">Activate with email</button>
+      </div>
+      <div class="card">
+        <h3>Starter</h3>
+        <div class="price">$29<span class="muted" style="font-size:14px">/mo</span></div>
+        <p>300 chat turns<br>200 scrapes<br>1 device</p>
+      </div>
+      <div class="card">
+        <h3>Business ⭐</h3>
+        <div class="price">$79<span class="muted" style="font-size:14px">/mo</span></div>
+        <p>1,200 chat turns<br>1,000 scrapes<br>5 devices</p>
+      </div>
+      <div class="card">
+        <h3>Scale</h3>
+        <div class="price">$199<span class="muted" style="font-size:14px">/mo</span></div>
+        <p>5,000 chat turns<br>5,000 scrapes<br>20 devices</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>Scrape packs (high margin add-ons)</h3>
+      <p><b>$12</b> → +500 scrapes &nbsp;&nbsp;|&nbsp;&nbsp; <b>$35</b> → +2,000 scrapes</p>
+      <p class="muted">Math: if proxy/fetch cost is ~$0.01–$0.03/scrape, $12 / 500 ≈ strong contribution margin after infra.</p>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="tab-settings" class="panel hidden">
+    <h2>⚙️ Settings</h2>
+    <label>Backend URL (your phone's tunnel)</label>
+    <input id="backendUrl" placeholder="https://your-tunnel.serveo.net" />
+    <label>Email for trial / account</label>
+    <input id="email" placeholder="you@business.com" />
+    <div class="cta-row" style="margin-top:12px">
+      <button class="btn primary" id="activateBtn">Activate 6 hours free</button>
+      <button class="btn" id="saveSettingsBtn">Save settings</button>
+      <button class="btn" id="refreshMeBtn">Refresh usage</button>
+    </div>
+    <p class="muted" style="margin-top:12px">Fingerprint ID (auto): <code id="fpShow"></code></p>
+    <p class="muted">No NoMask key is stored in this frontend. Your phone backend holds the key.</p>
+    <pre id="settingsOut" class="muted"></pre>
+  </section>
+
+  <div class="footer">Autora MVP · Authorized device control only · Rotate exposed API keys · Host secrets on backend</div>
+</div>
+
+<!-- Trial modal -->
+<div id="modal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:16px">
+  <div class="panel" style="max-width:460px;width:100%">
+    <h3>Activate free trial</h3>
+    <p class="muted">Enter your email to unlock 6 hours free + 25 scrapes. Locked to this device fingerprint.</p>
+    <label>Email</label>
+    <input id="modalEmail" placeholder="you@business.com" />
+    <div class="cta-row" style="margin-top:12px">
+      <button class="btn primary" id="modalGo">Start free trial</button>
+      <button class="btn" id="modalClose">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
-/* =========================
-   NoMask model catalog
-   - Edit/add IDs to match your dashboard exactly
-   ========================= */
-const MODELS = [
-  // LIGHT / cheap / fast — default majority traffic
-  { id: 'deepseek-v4-flash', name: 'DeepSeek V4 Flash', tier: 'light', desc: 'Fast cheap default for easy questions' },
-  { id: 'deepseek-chat', name: 'DeepSeek Chat', tier: 'light', desc: 'Lightweight general chat' },
-  { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B Instant', tier: 'light', desc: 'Snappy simple Q&A' },
-  { id: 'qwen-2.5-7b-instruct', name: 'Qwen 2.5 7B', tier: 'light', desc: 'Efficient everyday tasks' },
-
-  // MEDIUM
-  { id: 'venice-uncensored-1.2', name: 'Venice Uncensored 1.2', tier: 'medium', desc: 'Balanced + freer style' },
-  { id: 'deepseek-v3', name: 'DeepSeek V3', tier: 'medium', desc: 'Stronger general reasoning' },
-  { id: 'llama-3.3-70b', name: 'Llama 3.3 70B', tier: 'medium', desc: 'Solid analysis & writing' },
-  { id: 'qwen-2.5-72b-instruct', name: 'Qwen 2.5 72B', tier: 'medium', desc: 'Good multilingual + coding help' },
-
-  // HEAVY / premium
-  { id: 'grok-4.5', name: 'Grok 4.5', tier: 'heavy', desc: 'Hard problems, coding, deep reasoning' },
-  { id: 'claude-4-sonnet', name: 'Claude 4 Sonnet', tier: 'heavy', desc: 'Premium quality long-form' },
-  { id: 'gpt-5', name: 'GPT-5', tier: 'heavy', desc: 'Top-tier complex tasks' },
-  { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', tier: 'heavy', desc: 'Long context / hard analysis' }
-];
-
-const DEFAULTS = {
-  apiKey: '',
-  baseUrl: 'https://nomask.ai/api/v1',
-  temperature: 0.7,
-  maxTokens: 1024,
-  dailyLimit: 200,
-  memoryLimit: 20,
-  systemPrompt: 'You are Autora Dave, a sharp business + coding assistant. Be useful, direct, and concise unless detail is needed.',
-  useMemories: true,
-  streamOutput: false,
-  darkTheme: true,
-  routingMode: 'auto',
-  manualModel: 'deepseek-v4-flash'
+const state = {
+  backend: localStorage.getItem("autora_backend") || "",
+  token: localStorage.getItem("autora_token") || "",
+  email: localStorage.getItem("autora_email") || "",
+  fingerprint: localStorage.getItem("autora_fp") || "",
+  usage: null,
+  platform: null,
+  method: null,
+  history: []
 };
 
-let state = loadState();
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
 
-function loadState() {
-  const raw = localStorage.getItem('autora_dave_state');
-  const base = {
-    settings: { ...DEFAULTS },
-    messages: [],
-    memories: [],
-    usage: { date: today(), msgs: 0, light: 0, medium: 0, heavy: 0 }
-  };
-  if (!raw) return base;
-  try {
-    const parsed = JSON.parse(raw);
-    return {
-      ...base,
-      ...parsed,
-      settings: { ...DEFAULTS, ...(parsed.settings || {}) },
-      usage: parsed.usage?.date === today() ? parsed.usage : base.usage
-    };
-  } catch {
-    return base;
-  }
-}
-function saveState() {
-  localStorage.setItem('autora_dave_state', JSON.stringify(state));
-}
-function today() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-/* ========== UI wiring ========== */
-const $ = (id) => document.getElementById(id);
-const messagesEl = $('messages');
-
-document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-    btn.classList.add('active');
-    $(btn.dataset.tab).classList.add('active');
+function showTab(name){
+  $$(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+  ["home","chat","connect","scrape","pricing","settings"].forEach(t => {
+    $("#tab-" + t).classList.toggle("hidden", t !== name);
   });
-});
-
-function populateModels() {
-  const manual = $('manualModel');
-  manual.innerHTML = '';
-  MODELS.forEach(m => {
-    const opt = document.createElement('option');
-    opt.value = m.id;
-    opt.textContent = `[${m.tier}] ${m.name} (${m.id})`;
-    manual.appendChild(opt);
-  });
-  manual.value = state.settings.manualModel;
-
-  const catalog = $('modelCatalog');
-  catalog.innerHTML = MODELS.map(m => `
-    <div class="item">
-      <h4>${m.name} <span class="tag ${m.tier}">${m.tier}</span></h4>
-      <p><code>${m.id}</code> — ${m.desc}</p>
-    </div>
-  `).join('');
 }
 
-function applySettingsToForm() {
-  const s = state.settings;
-  $('apiKey').value = s.apiKey || '';
-  $('baseUrl').value = s.baseUrl || DEFAULTS.baseUrl;
-  $('temperature').value = s.temperature;
-  $('maxTokens').value = s.maxTokens;
-  $('dailyLimit').value = s.dailyLimit;
-  $('memoryLimit').value = s.memoryLimit;
-  $('systemPrompt').value = s.systemPrompt;
-  $('useMemories').checked = !!s.useMemories;
-  $('streamOutput').checked = !!s.streamOutput;
-  $('darkTheme').checked = !!s.darkTheme;
-  $('routingMode').value = s.routingMode;
-  $('manualModel').value = s.manualModel;
-  updateTopbar('auto', 'light');
-  renderMessages();
-  renderMemories();
-  updateUsageUI();
+$$(".tab-btn").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
+$$("[data-goto]").forEach(b => b.addEventListener("click", () => showTab(b.dataset.goto)));
+
+async function fingerprint(){
+  if (state.fingerprint) return state.fingerprint;
+  const parts = [navigator.userAgent, navigator.language, screen.width + "x" + screen.height + "x" + screen.colorDepth, Intl.DateTimeFormat().resolvedOptions().timeZone || "", navigator.hardwareConcurrency || "", navigator.platform || ""].join("|");
+  const data = new TextEncoder().encode(parts);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  const fp = [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2,"0")).join("").slice(0,32);
+  state.fingerprint = fp;
+  localStorage.setItem("autora_fp", fp);
+  return fp;
 }
 
-function updateTopbar(model, tier) {
-  $('activeModelLabel').textContent = model;
-  $('activeTierLabel').textContent = tier;
-  $('usageLabel').textContent = state.usage.msgs;
+function saveLocal(){
+  localStorage.setItem("autora_backend", state.backend);
+  localStorage.setItem("autora_token", state.token || "");
+  localStorage.setItem("autora_email", state.email || "");
 }
 
-function updateUsageUI() {
-  $('statMsgs').textContent = state.usage.msgs;
-  $('statLight').textContent = state.usage.light;
-  $('statMedium').textContent = state.usage.medium;
-  $('statHeavy').textContent = state.usage.heavy;
-  $('usageLabel').textContent = state.usage.msgs;
+function msToClock(ms){
+  if (ms == null) return "—";
+  const s = Math.max(0, Math.floor(ms/1000));
+  const h = Math.floor(s/3600);
+  const m = Math.floor((s%3600)/60);
+  const sec = s%60;
+  return `${h}h ${m}m ${sec}s`;
 }
 
-/* ========== Memories ========== */
-function renderMemories() {
-  const list = $('memoryList');
-  if (!state.memories.length) {
-    list.innerHTML = '<div class="hint">No memories yet.</div>';
+function renderUsage(){
+  const u = state.usage;
+  if (!u){
+    $("#homeStatus").textContent = "Not activated";
+    $("#statPlan").textContent = "—";
+    $("#statTime").textContent = "—";
+    $("#statChat").textContent = "—";
+    $("#statScrape").textContent = "—";
     return;
   }
-  list.innerHTML = state.memories.map((m, i) => `
-    <div class="item">
-      <h4>#${i + 1}</h4>
-      <p>${escapeHtml(m)}</p>
-      <div class="row" style="margin-top:8px">
-        <button class="secondary" onclick="deleteMemory(${i})">Delete</button>
-      </div>
-    </div>
-  `).join('');
-}
-window.deleteMemory = (i) => {
-  state.memories.splice(i, 1);
-  saveState();
-  renderMemories();
-};
-$('addMemoryBtn').onclick = () => {
-  const v = $('memoryInput').value.trim();
-  if (!v) return;
-  state.memories.unshift(v);
-  state.memories = state.memories.slice(0, Number(state.settings.memoryLimit || 20));
-  $('memoryInput').value = '';
-  saveState();
-  renderMemories();
-};
-$('clearMemoriesBtn').onclick = () => {
-  if (confirm('Clear all memories?')) {
-    state.memories = [];
-    saveState();
-    renderMemories();
+  $("#statPlan").textContent = u.plan;
+  $("#statTime").textContent = u.plan === "trial" ? msToClock(u.msLeft) : "Paid window";
+  $("#statChat").textContent = `${u.chatLeft} / ${u.chatLimit}`;
+  $("#statScrape").textContent = `${u.scrapeLeft} / ${u.scrapeLimit}`;
+  $("#homeStatus").textContent = u.trialOpen || u.plan !== "trial" ? `Active · ${u.plan}` : "Trial expired";
+  $("#scrapeStatus").textContent = `${u.scrapeLeft} scrapes left`;
+  const banner = $("#trialBanner");
+  if (!state.token){
+    banner.className = "banner";
+    banner.textContent = "Activate free trial with email to chat.";
+  } else if (u.plan === "trial" && u.trialOpen){
+    banner.className = "banner ok";
+    banner.textContent = `Trial active · ${msToClock(u.msLeft)} left · ${u.chatLeft} chats · ${u.scrapeLeft} scrapes`;
+  } else if (u.plan === "trial"){
+    banner.className = "banner bad";
+    banner.textContent = "Trial expired. Go to Pricing/Settings.";
+  } else {
+    banner.className = "banner ok";
+    banner.textContent = `Plan: ${u.plan} · ${u.chatLeft} chats · ${u.scrapeLeft} scrapes`;
   }
+}
+
+async function api(path, opts={}){
+  const headers = Object.assign({"Content-Type":"application/json"}, opts.headers || {});
+  if (state.token) headers.Authorization = `Bearer ${state.token}`;
+  const r = await fetch(state.backend + path, {...opts, headers});
+  const data = await r.json().catch(()=>({}));
+  if (!r.ok) throw new Error(data.error || r.statusText);
+  return data;
+}
+
+function addMsg(role, text){
+  const div = document.createElement("div");
+  div.className = "msg " + (role === "user" ? "user" : "bot");
+  div.textContent = text;
+  $("#msgs").appendChild(div);
+  $("#msgs").scrollTop = $("#msgs").scrollHeight;
+}
+
+async function activateTrial(email){
+  state.email = email.trim().toLowerCase();
+  const fp = await fingerprint();
+  const data = await api("/api/trial/start", {
+    method: "POST",
+    body: JSON.stringify({ email: state.email, fingerprint: fp })
+  });
+  state.token = data.token;
+  state.usage = data.usage;
+  saveLocal();
+  renderUsage();
+  $("#settingsOut").textContent = JSON.stringify(data, null, 2);
+  return data;
+}
+
+$("#saveSettingsBtn").onclick = () => {
+  state.backend = $("#backendUrl").value.trim().replace(/\/$/,"");
+  state.email = $("#email").value.trim();
+  saveLocal();
+  $("#settingsOut").textContent = "Saved settings";
 };
 
-/* ========== Scraper ========== */
-$('scrapeBtn').onclick = async () => {
-  const url = $('scrapeUrl').value.trim();
-  if (!url) return alert('Enter a URL');
-  $('scrapeOutput').value = 'Scraping...';
+$("#activateBtn").onclick = async () => {
   try {
-    const res = await fetch(url);
-    const html = await res.text();
-    if ($('scrapeMode').value === 'raw') {
-      $('scrapeOutput').value = html.slice(0, 30000);
-    } else {
-      $('scrapeOutput').value = htmlToText(html).slice(0, 30000);
-    }
+    state.backend = $("#backendUrl").value.trim().replace(/\/$/,"");
+    saveLocal();
+    await activateTrial($("#email").value || state.email);
+    addMsg("bot", "✅ Trial activated. You have 6 hours free + 25 scrapes.");
   } catch (e) {
-    $('scrapeOutput').value = `Scrape failed (likely CORS): ${e.message}\n\nTip: paste content manually or host a small proxy later.`;
-  }
-};
-$('sendScrapeToChatBtn').onclick = () => {
-  const text = $('scrapeOutput').value.trim();
-  if (!text) return;
-  $('userInput').value = `Analyze this scraped content and extract the key points:\n\n${text.slice(0, 12000)}`;
-  document.querySelector('[data-tab="chat"]').click();
-};
-
-function htmlToText(html) {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  ['script','style','noscript','iframe'].forEach(sel => doc.querySelectorAll(sel).forEach(n => n.remove()));
-  return (doc.body?.textContent || '').replace(/\s+/g, ' ').trim();
-}
-
-/* ========== Smart model router ========== */
-function classifyTier(prompt) {
-  const p = (prompt || '').toLowerCase();
-  const len = p.length;
-
-  const heavySignals = [
-    'write code', 'full code', 'refactor', 'architecture', 'debug this', 'stack trace',
-    'prove', 'reason step by step', 'complex', 'optimize algorithm', 'regex', 'sql query',
-    'design system', 'unit test', 'implement', 'deep analysis', 'compare tradeoffs',
-    'long-form', 'research', 'multi-step', 'build a', 'from scratch'
-  ];
-  const mediumSignals = [
-    'explain', 'summarize', 'analyse', 'analyze', 'rewrite', 'improve', 'plan',
-    'strategy', 'outline', 'scrape', 'compare', 'pros and cons', 'draft', 'email',
-    'business', 'marketing', 'how does', 'why does'
-  ];
-
-  if (heavySignals.some(s => p.includes(s)) || len > 1200 || /```/.test(prompt)) return 'heavy';
-  if (mediumSignals.some(s => p.includes(s)) || len > 280) return 'medium';
-
-  // short/easy
-  if (len < 140 && !/[?].*[?]/.test(p)) return 'light';
-  return 'light';
-}
-
-function pickModelForTier(tier) {
-  const pool = MODELS.filter(m => m.tier === tier);
-  // prefer first listed in that tier (you can reorder catalog to prioritize cheapest)
-  return pool[0] || MODELS[0];
-}
-
-function resolveModel(userText) {
-  if (state.settings.routingMode === 'manual') {
-    const m = MODELS.find(x => x.id === state.settings.manualModel) || MODELS[0];
-    return { model: m.id, tier: m.tier, reason: 'Manual override' };
-  }
-  const tier = classifyTier(userText);
-  const m = pickModelForTier(tier);
-  return { model: m.id, tier, reason: `Auto-routed to ${tier} based on question difficulty` };
-}
-
-/* ========== Chat ========== */
-function renderMessages() {
-  messagesEl.innerHTML = state.messages.map(m => `
-    <div class="msg ${m.role}">
-      <div class="meta">
-        <span>${m.role}</span>
-        ${m.model ? `<span class="tag ${m.tier || 'light'}">${m.model}</span>` : ''}
-        ${m.tier ? `<span class="tag ${m.tier}">${m.tier}</span>` : ''}
-      </div>
-      <div>${escapeHtml(m.content)}</div>
-    </div>
-  `).join('');
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-}
-
-function escapeHtml(str) {
-  return (str || '').replace(/[&<>"']/g, s => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  })[s]);
-}
-
-$('clearChatBtn').onclick = () => {
-  if (confirm('Clear chat history?')) {
-    state.messages = [];
-    saveState();
-    renderMessages();
+    $("#settingsOut").textContent = e.message;
+    alert(e.message);
   }
 };
 
-$('sendBtn').onclick = sendMessage;
-$('userInput').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
+$("#refreshMeBtn").onclick = async () => {
+  try {
+    const me = await api("/api/me");
+    state.usage = me.usage;
+    renderUsage();
+    $("#settingsOut").textContent = JSON.stringify(me, null, 2);
+  } catch (e) {
+    $("#settingsOut").textContent = e.message;
   }
+};
+
+$("#chatNowBtn").onclick = async () => {
+  showTab("chat");
+  if (!state.token){
+    $("#modal").classList.remove("hidden");
+    $("#modal").style.display = "grid";
+  }
+};
+$("#pricingTrialBtn").onclick = () => { showTab("settings"); $("#email").focus(); };
+$("#modalClose").onclick = () => { $("#modal").classList.add("hidden"); $("#modal").style.display = "none"; };
+$("#modalGo").onclick = async () => {
+  try {
+    await activateTrial($("#modalEmail").value);
+    $("#modal").classList.add("hidden");
+    $("#modal").style.display = "none";
+    showTab("chat");
+    addMsg("bot", "🚀 Welcome to Autora. Trial is live for 6 hours.");
+  } catch (e) { alert(e.message); }
+};
+
+$("#sendBtn").onclick = sendChat;
+$("#chatInput").addEventListener("keydown", e => { if (e.key === "Enter") sendChat(); });
+
+async function sendChat(){
+  const input = $("#chatInput");
+  const message = input.value.trim();
+  if (!message) return;
+  if (!state.token){ $("#modal").classList.remove("hidden"); $("#modal").style.display = "grid"; return; }
+  if (!state.backend){ alert("Set your backend URL in Settings first!"); showTab("settings"); return; }
+  input.value = "";
+  addMsg("user", message);
+  state.history.push({ role:"user", content:message });
+  try {
+    const data = await api("/api/chat", { method:"POST", body: JSON.stringify({ message, history: state.history }) });
+    addMsg("bot", data.reply);
+    state.history.push({ role:"assistant", content:data.reply });
+    state.usage = data.usage;
+    renderUsage();
+  } catch (e) { addMsg("bot", "⚠️ " + e.message); }
+}
+
+$$("[data-platform]").forEach(card => {
+  card.onclick = async () => {
+    if (!state.token) return alert("Activate trial first");
+    if (!state.backend){ showTab("settings"); alert("Set backend URL first!"); return; }
+    state.platform = card.dataset.platform;
+    $("#methodBox").classList.remove("hidden");
+    $("#methodTitle").textContent = `Methods for ${state.platform}`;
+    try {
+      const data = await api("/api/connect/methods");
+      const methods = data.methods[state.platform] || [];
+      const grid = $("#methodGrid");
+      grid.innerHTML = "";
+      methods.forEach(m => {
+        const d = document.createElement("div");
+        d.className = "card";
+        d.innerHTML = `<h3>${m.name}</h3><p class="muted">${m.level} · ${m.summary}</p>`;
+        d.onclick = async () => {
+          state.method = m.id;
+          const ins = await api(`/api/connect/instructions?platform=${state.platform}&method=${m.id}`);
+          $("#stepsList").innerHTML = ins.steps.map(s => `<li>${s}</li>`).join("");
+          $("#devName").value = `${state.platform} ${m.name}`;
+          $("#devPort").value = m.id === "ssh" ? "22" : "";
+        };
+        grid.appendChild(d);
+      });
+      loadDevices();
+    } catch (e) { alert(e.message); }
+  };
 });
 
-async function sendMessage() {
-  const text = $('userInput').value.trim();
-  if (!text) return;
-
-  if (!state.settings.apiKey) {
-    alert('Add your NoMask API key in Settings first.');
-    document.querySelector('[data-tab="settings"]').click();
-    return;
-  }
-
-  if (state.usage.msgs >= Number(state.settings.dailyLimit || 200)) {
-    alert('Daily message limit reached. Raise it in Settings or wait until tomorrow.');
-    return;
-  }
-
-  const route = resolveModel(text);
-  updateTopbar(route.model, route.tier);
-  $('routeHint').textContent = `↪️ ${route.reason} · using ${route.model}`;
-
-  state.messages.push({ role: 'user', content: text });
-  $('userInput').value = '';
-  renderMessages();
-  saveState();
-
-  const assistantPlaceholder = { role: 'assistant', content: 'Thinking…', model: route.model, tier: route.tier };
-  state.messages.push(assistantPlaceholder);
-  renderMessages();
-
+async function loadDevices(){
   try {
-    const reply = await callNoMask(route.model, text);
-    assistantPlaceholder.content = reply;
-    state.usage.msgs += 1;
-    state.usage[route.tier] = (state.usage[route.tier] || 0) + 1;
-    updateUsageUI();
-    saveState();
-    renderMessages();
-  } catch (err) {
-    assistantPlaceholder.content = `⚠️ Error: ${err.message}`;
-    saveState();
-    renderMessages();
-  }
+    const data = await api("/api/devices");
+    if (!data.devices.length){ $("#deviceList").textContent = "No devices saved yet."; return; }
+    $("#deviceList").innerHTML = data.devices.map(d => `<div class="card" style="margin-bottom:8px"><b>${d.name}</b><br><span class="muted">${d.platform} · ${d.method} · ${d.host || "no host"}</span></div>`).join("");
+  } catch (e) { $("#deviceList").textContent = e.message; }
 }
 
-async function callNoMask(model, userText) {
-  const s = state.settings;
-  const msgs = [];
-
-  msgs.push({ role: 'system', content: s.systemPrompt || DEFAULTS.systemPrompt });
-
-  if (s.useMemories && state.memories.length) {
-    msgs.push({
-      role: 'system',
-      content: `Relevant memories:\n- ${state.memories.slice(0, s.memoryLimit).join('\n- ')}`
-    });
-  }
-
-  // last few turns for short context (keeps cost down)
-  const history = state.messages
-    .filter(m => m.role === 'user' || m.role === 'assistant')
-    .slice(-8)
-    .map(m => ({ role: m.role, content: m.content }));
-
-  // replace trailing placeholder assistant if present
-  while (history.length && history[history.length - 1].role === 'assistant' && history[history.length - 1].content === 'Thinking…') {
-    history.pop();
-  }
-
-  // ensure current user message is included once
-  if (!history.length || history[history.length - 1].content !== userText) {
-    history.push({ role: 'user', content: userText });
-  }
-
-  msgs.push(...history);
-
-  const endpoint = `${s.baseUrl.replace(/\/$/, '')}/chat/completions`;
-  const res = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${s.apiKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      model,
-      messages: msgs,
-      temperature: Number(s.temperature),
-      max_tokens: Number(s.maxTokens)
-    })
-  });
-
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    throw new Error(data.error?.message || data.message || `HTTP ${res.status}`);
-  }
-
-  const content = data.choices?.[0]?.message?.content
-    || data.choices?.[0]?.text
-    || data.output_text
-    || JSON.stringify(data);
-
-  return content;
-}
-
-/* ========== Settings ========== */
-$('saveSettingsBtn').onclick = () => {
-  state.settings = {
-    ...state.settings,
-    apiKey: $('apiKey').value.trim(),
-    baseUrl: $('baseUrl').value.trim() || DEFAULTS.baseUrl,
-    temperature: Number($('temperature').value),
-    maxTokens: Number($('maxTokens').value),
-    dailyLimit: Number($('dailyLimit').value),
-    memoryLimit: Number($('memoryLimit').value),
-    systemPrompt: $('systemPrompt').value,
-    useMemories: $('useMemories').checked,
-    streamOutput: $('streamOutput').checked,
-    darkTheme: $('darkTheme').checked,
-    routingMode: $('routingMode').value,
-    manualModel: $('manualModel').value
-  };
-  saveState();
-  alert('Settings saved ✅');
-};
-
-$('routingMode').onchange = () => {
-  state.settings.routingMode = $('routingMode').value;
-  saveState();
-};
-$('manualModel').onchange = () => {
-  state.settings.manualModel = $('manualModel').value;
-  saveState();
-  updateTopbar(state.settings.manualModel, (MODELS.find(m => m.id === state.settings.manualModel) || {}).tier || 'light');
-};
-
-$('exportBtn').onclick = () => {
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `autora-dave-export-${today()}.json`;
-  a.click();
-};
-$('importBtn').onclick = () => $('importFile').click();
-$('importFile').onchange = async (e) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
+$("#saveDeviceBtn").onclick = async () => {
   try {
-    const text = await file.text();
-    const parsed = JSON.parse(text);
-    state = {
-      settings: { ...DEFAULTS, ...(parsed.settings || {}) },
-      messages: parsed.messages || [],
-      memories: parsed.memories || [],
-      usage: parsed.usage?.date === today() ? parsed.usage : { date: today(), msgs: 0, light: 0, medium: 0, heavy: 0 }
-    };
-    saveState();
-    applySettingsToForm();
-    alert('Import complete ✅');
-  } catch {
-    alert('Import failed');
-  }
-};
-$('resetBtn').onclick = () => {
-  if (confirm('Reset ALL local data?')) {
-    localStorage.removeItem('autora_dave_state');
-    state = loadState();
-    applySettingsToForm();
-  }
+    if (!state.platform || !state.method) return alert("Pick platform and method");
+    const data = await api("/api/devices", { method:"POST", body: JSON.stringify({ name: $("#devName").value, platform: state.platform, method: state.method, host: $("#devHost").value, port: Number($("#devPort").value || 0) || null, username: $("#devUser").value, notes: $("#devNotes").value }) });
+    $("#connectOut").textContent = "Saved device " + data.id + "\n\n" + (data.steps||[]).map((s,i)=>`${i+1}. ${s}`).join("\n");
+    loadDevices();
+  } catch (e) { $("#connectOut").textContent = e.message; }
 };
 
-/* boot */
-populateModels();
-applySettingsToForm();
+$("#scrapeBtn").onclick = async () => {
+  try {
+    if (!state.token) return alert("Activate trial first");
+    if (!state.backend){ showTab("settings"); alert("Set backend URL first!"); return; }
+    $("#scrapeStatus").textContent = "Running...";
+    const data = await api("/api/scrape/top10", { method:"POST", body: JSON.stringify({ query: $("#scrapeQuery").value, limit: Number($("#scrapeLimit").value || 10) }) });
+    state.usage = data.usage;
+    renderUsage();
+    $("#scrapeOut").textContent = JSON.stringify(data.results, null, 2);
+    $("#scrapeStatus").textContent = "Done";
+  } catch (e) { $("#scrapeOut").textContent = e.message; $("#scrapeStatus").textContent = "Error"; }
+};
+
+(async function init(){
+  $("#backendUrl").value = state.backend;
+  $("#email").value = state.email;
+  await fingerprint();
+  $("#fpShow").textContent = state.fingerprint;
+  renderUsage();
+  if (state.token && state.backend){
+    try {
+      const me = await api("/api/me");
+      state.usage = me.usage;
+      renderUsage();
+    } catch { state.token = ""; saveLocal(); }
+  }
+  setInterval(() => { if (state.usage?.plan === "trial") renderUsage(); }, 1000);
+})();
 </script>
 </body>
 </html>
