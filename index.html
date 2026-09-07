@@ -5,240 +5,275 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Autora AI — Your business, connected</title>
 <style>
-  :root{
-    --bg:#f4f6fa; --panel:#ffffff; --text:#0f172a; --muted:#64748b;
-    --accent:#2563eb; --accent-2:#3b82f6; --line:#e2e8f0;
-    --line-soft:#eef2f6; --soft:#f8fafc; --soft-2:#f1f5f9;
-  }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,system-ui,sans-serif;
-    background:var(--bg);
-    color:var(--text);
+    background:#ffffff;
+    color:#1e293b;
     min-height:100vh;
   }
-  .icn{width:16px;height:16px;display:inline-block;vertical-align:-3px;flex-shrink:0}
-  .icn-18{width:18px;height:18px}
-  .icn-22{width:22px;height:22px}
-  .icn-28{width:28px;height:28px;vertical-align:-7px}
 
   /* ===== SCREENS ===== */
   .screen{display:none;min-height:100vh;flex-direction:column}
   .screen.active{display:flex}
 
-  /* ===== HOME WITH SIDEBAR ===== */
-  #home-screen{
-    flex-direction:row;
-    background:var(--bg);
+  /* ===== AUTH SCREEN ===== */
+  #auth-screen{
+    align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#f8fafc 0%,#eff6ff 50%,#f0f9ff 100%);
+    padding:24px;
     min-height:100vh;
   }
-  .home-sidebar{
-    width:280px;flex-shrink:0;
-    background:var(--panel);
-    border-right:1px solid var(--line);
-    padding:28px 16px;
-    display:flex;flex-direction:column;
-    min-height:100vh;
-    box-shadow:2px 0 12px rgba(0,0,0,.03);
+  .auth-card{
+    max-width:440px;width:100%;
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:24px;
+    padding:40px 36px 36px;
+    box-shadow:0 20px 60px rgba(0,0,0,.04),0 1px 3px rgba(0,0,0,.02);
+    text-align:center;
   }
-  .home-sidebar .logo-area{
-    display:flex;align-items:center;gap:12px;
-    padding-bottom:24px;
-    border-bottom:1px solid var(--line-soft);
-    margin-bottom:20px;
-  }
-  .home-sidebar .logo-area .logo{
-    width:40px;height:40px;border-radius:12px;
-    background:linear-gradient(135deg,var(--accent-2),var(--accent));
+  .auth-logo{
+    width:56px;height:56px;border-radius:16px;
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
     display:flex;align-items:center;justify-content:center;
-    font-weight:800;font-size:18px;color:#fff;
-    box-shadow:0 4px 12px rgba(59,130,246,.2);
+    font-weight:800;font-size:22px;color:#fff;
+    margin:0 auto 20px;
+    box-shadow:0 4px 16px rgba(37,99,235,.2);
   }
-  .home-sidebar .logo-area h2{font-size:18px;font-weight:700;color:var(--text)}
-  .home-sidebar .logo-area p{font-size:12px;color:var(--muted);margin-top:2px}
+  .auth-card h1{font-size:26px;font-weight:800;margin-bottom:6px;color:#0f172a}
+  .auth-card .subtitle{color:#64748b;font-size:14px;margin-bottom:24px;line-height:1.5}
+  .auth-tabs{
+    display:flex;gap:0;margin-bottom:24px;
+    border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;
+  }
+  .auth-tab{
+    flex:1;padding:12px;border:none;background:#f8fafc;color:#64748b;
+    font-weight:600;font-size:14px;cursor:pointer;transition:all .12s;
+  }
+  .auth-tab.active{background:#ffffff;color:#2563eb;box-shadow:inset 0 2px 0 #2563eb}
+  .auth-tab:first-child{border-right:1px solid #e2e8f0}
+  .auth-field{
+    margin-bottom:16px;text-align:left;
+  }
+  .auth-field label{
+    display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px;
+  }
+  .auth-field input{
+    width:100%;padding:12px 14px;border-radius:12px;
+    background:#f8fafc;border:1px solid #e2e8f0;
+    color:#0f172a;font:inherit;font-size:14px;outline:none;transition:all .12s;
+  }
+  .auth-field input:focus{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(59,130,246,.08)}
+  .auth-btn{
+    width:100%;padding:14px;border-radius:12px;
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    color:#fff;font-weight:700;font-size:15px;border:none;cursor:pointer;
+    box-shadow:0 4px 14px rgba(37,99,235,.2);transition:all .15s;
+    margin-top:8px;
+  }
+  .auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.25)}
+  .auth-card .terms{
+    font-size:12px;color:#94a3b8;margin-top:16px;
+  }
+  .auth-error{
+    color:#ef4444;font-size:13px;margin-bottom:12px;display:none;
+  }
+  .auth-success{
+    color:#22c55e;font-size:13px;margin-bottom:12px;display:none;
+  }
+  .auth-divider{height:1px;background:#e2e8f0;margin:20px 0}
 
-  .dropdown-group{margin-bottom:6px}
-  .dropdown-header{
+  /* ===== HOME ===== */
+  #home-screen{background:#ffffff}
+
+  .topbar{
     display:flex;align-items:center;justify-content:space-between;
-    padding:11px 14px;border-radius:12px;
-    background:transparent;border:none;color:#334155;
-    font-weight:600;font-size:14px;cursor:pointer;
-    width:100%;text-align:left;transition:all .12s;
+    padding:14px 24px;
+    border-bottom:1px solid #eef2f6;
+    background:#ffffff;
+    position:sticky;top:0;z-index:20;
   }
-  .dropdown-header:hover{background:var(--soft-2)}
-  .dropdown-header .arrow{
-    transition:transform .2s;color:#94a3b8;display:flex;align-items:center;
+  .topbar-left{display:flex;align-items:center;gap:14px}
+  .topbar-left .logo-small{
+    width:34px;height:34px;border-radius:10px;
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:15px;color:#fff;
   }
-  .dropdown-header .arrow.open{transform:rotate(180deg)}
-  .dropdown-content{
-    padding-left:8px;max-height:0;overflow:hidden;
-    transition:max-height .25s ease;
-  }
-  .dropdown-content.open{max-height:500px}
-  .dropdown-item{
-    display:flex;align-items:center;gap:10px;
-    padding:9px 14px;border-radius:10px;
-    color:#475569;font-size:13px;font-weight:500;
-    cursor:pointer;transition:all .1s;border:none;background:transparent;
-    width:100%;text-align:left;
-  }
-  .dropdown-item:hover{background:var(--soft-2);color:var(--text)}
-  .dropdown-item.active{background:#eff6ff;color:var(--accent);font-weight:600}
-  .dropdown-item .icon{
-    width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;
-    color:#94a3b8;flex-shrink:0;
-  }
-  .dropdown-item.active .icon{color:var(--accent)}
+  .topbar-left h2{font-size:17px;font-weight:700;color:#0f172a}
+  .topbar-right{display:flex;align-items:center;gap:8px}
 
-  .home-sidebar .sidebar-footer{
-    margin-top:auto;padding-top:16px;
-    border-top:1px solid var(--line-soft);
-    display:flex;flex-direction:column;gap:4px;
+  .hamburger{
+    width:38px;height:38px;border-radius:10px;padding:0;
+    display:flex;align-items:center;justify-content:center;
+    background:#f8fafc;border:1px solid #e2e8f0;
+    cursor:pointer;color:#64748b;font-size:18px;transition:all .12s;
+    font-weight:600;
   }
-  .sidebar-footer button{
-    padding:10px 14px;border-radius:10px;
+  .hamburger:hover{background:#e2e8f0;color:#0f172a}
+  .hamburger.active{background:#eff6ff;color:#2563eb;border-color:#bfdbfe}
+
+  .btn-icon{
+    width:38px;height:38px;border-radius:10px;padding:0;
+    display:flex;align-items:center;justify-content:center;
+    background:#f8fafc;border:1px solid #e2e8f0;
+    cursor:pointer;color:#64748b;font-size:16px;transition:all .12s;
+  }
+  .btn-icon:hover{background:#e2e8f0;color:#0f172a}
+
+  .btn{
+    padding:12px 24px;border-radius:12px;font-weight:600;font-size:14px;
+    cursor:pointer;border:none;transition:all .15s;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{
+    background:#2563eb;color:#fff;
+    box-shadow:0 4px 14px rgba(37,99,235,.2);
+  }
+  .btn-primary:hover{background:#1d4ed8;transform:translateY(-1px)}
+  .btn-secondary{
+    background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;
+  }
+  .btn-secondary:hover{background:#e2e8f0}
+  .btn-ghost{
+    background:transparent;color:#64748b;border:1px solid #e2e8f0;
+  }
+  .btn-ghost:hover{background:#f8fafc;color:#334155}
+  .btn-sm{padding:10px 16px;font-size:13px;border-radius:10px}
+
+  /* ===== SIDE MENU (slide in) ===== */
+  .menu-overlay{
+    position:fixed;inset:0;z-index:45;
+    background:rgba(0,0,0,.2);
+    display:none;
+  }
+  .menu-overlay.open{display:block}
+
+  .side-menu{
+    position:fixed;top:0;left:0;bottom:0;z-index:46;
+    width:300px;background:#ffffff;
+    border-right:1px solid #e2e8f0;
+    padding:24px 16px;
+    overflow-y:auto;
+    transform:translateX(-100%);
+    transition:transform .25s ease;
+    box-shadow:4px 0 30px rgba(0,0,0,.06);
+  }
+  .side-menu.open{transform:translateX(0)}
+
+  .side-menu-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-bottom:20px;border-bottom:1px solid #eef2f6;margin-bottom:16px;
+  }
+  .side-menu-header .logo-area{
+    display:flex;align-items:center;gap:12px;
+  }
+  .side-menu-header .logo-area .mlogo{
+    width:36px;height:36px;border-radius:10px;
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:16px;color:#fff;
+  }
+  .side-menu-header .logo-area h3{font-size:16px;font-weight:700;color:#0f172a}
+  .side-menu-header .close-menu{
+    width:32px;height:32px;border-radius:8px;border:none;
+    background:#f1f5f9;color:#64748b;cursor:pointer;font-size:16px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .side-menu-header .close-menu:hover{background:#e2e8f0;color:#0f172a}
+
+  .menu-section{margin-bottom:6px}
+  .menu-section-title{
+    font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.6px;
+    padding:12px 12px 6px;
+  }
+  .menu-item{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 12px;border-radius:10px;width:100%;
     border:none;background:transparent;color:#475569;
-    font-size:13px;font-weight:500;cursor:pointer;text-align:left;
-    display:flex;align-items:center;gap:10px;
+    font-size:14px;font-weight:500;cursor:pointer;text-align:left;
+    transition:all .1s;
   }
-  .sidebar-footer button:hover{background:var(--soft-2);color:var(--text)}
-  .sidebar-footer button .icon{color:#94a3b8}
+  .menu-item:hover{background:#f1f5f9;color:#0f172a}
+  .menu-item.active{background:#eff6ff;color:#2563eb;font-weight:600}
+  .menu-item .mi-icon{font-size:16px;width:24px;text-align:center}
 
-  .home-main{
-    flex:1;display:flex;align-items:center;justify-content:center;
-    padding:40px 48px;
+  .side-menu .menu-footer{
+    margin-top:24px;padding-top:16px;
+    border-top:1px solid #eef2f6;
+  }
+
+  /* ===== HOME CONTENT ===== */
+  .home-content{
+    display:flex;align-items:center;justify-content:center;
+    padding:60px 24px 40px;
     background:
-      radial-gradient(800px 400px at 30% 40%,rgba(59,130,246,.04),transparent 60%),
-      radial-gradient(600px 300px at 70% 60%,rgba(37,99,235,.03),transparent 50%),
-      var(--bg);
+      radial-gradient(800px 400px at 30% 40%,rgba(59,130,246,.03),transparent 60%),
+      radial-gradient(600px 300px at 70% 60%,rgba(37,99,235,.02),transparent 50%),
+      #ffffff;
+    min-height:calc(100vh - 62px);
   }
   .home-card{
     max-width:620px;width:100%;
-    background:var(--panel);
-    border:1px solid var(--line);
+    background:#ffffff;
+    border:1px solid #e2e8f0;
     border-radius:24px;
     padding:44px 40px 38px;
     text-align:center;
-    box-shadow:0 20px 60px rgba(0,0,0,.04),0 1px 3px rgba(0,0,0,.02);
+    box-shadow:0 20px 60px rgba(0,0,0,.03);
   }
   .home-card h1{
     font-size:30px;font-weight:800;margin-bottom:16px;line-height:1.2;
-    color:var(--text);
+    color:#0f172a;
   }
-  .home-card h1 span{color:var(--accent)}
-  .home-text{font-size:15px;line-height:1.7;color:#475569;margin-bottom:8px}
+  .home-card h1 span{color:#2563eb}
+  .home-text{
+    font-size:15px;line-height:1.7;color:#475569;margin-bottom:8px;
+  }
   .home-text strong{color:#1e293b}
   .home-divider{
-    height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);
+    height:1px;background:linear-gradient(90deg,transparent,#e2e8f0,transparent);
     margin:24px 0;
   }
   .home-buttons{
     display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
   }
-  .btn{
-    padding:14px 28px;border-radius:12px;font-weight:600;font-size:15px;
-    cursor:pointer;border:none;transition:all .15s;
-    display:inline-flex;align-items:center;gap:10px;
-  }
-  .btn-primary{
-    background:var(--accent);color:#fff;
-    box-shadow:0 4px 14px rgba(37,99,235,.2);
-  }
-  .btn-primary:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.25)}
-  .btn-secondary{
-    background:var(--soft-2);color:#334155;border:1px solid var(--line);
-  }
-  .btn-secondary:hover{background:var(--line)}
-  .btn-ghost{
-    background:transparent;color:var(--muted);border:1px solid var(--line);
-  }
-  .btn-ghost:hover{background:var(--soft);color:#334155}
-  .btn-icon{
-    width:38px;height:38px;border-radius:10px;padding:0;
-    display:flex;align-items:center;justify-content:center;
-    background:var(--soft);border:1px solid var(--line);
-    cursor:pointer;color:var(--muted);transition:all .12s;
-  }
-  .btn-icon:hover{background:var(--line);color:var(--text)}
-  .btn-sm{padding:10px 18px;font-size:13px;border-radius:10px}
-
   .home-pills{
     display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:18px 0 4px;
   }
   .pill{
     font-size:11px;padding:5px 10px;border-radius:999px;
-    background:var(--soft-2);color:#475569;border:1px solid var(--line);
-    display:inline-flex;align-items:center;gap:4px;
+    background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;
   }
-  .pill svg{width:11px;height:11px;opacity:.7}
-
-  /* ===== BACKUP ===== */
-  #backup-screen{
-    align-items:flex-start;justify-content:center;
-    background:var(--bg);padding:32px 24px;
-  }
-  .backup-card{
-    max-width:720px;width:100%;
-    background:var(--panel);border:1px solid var(--line);
-    border-radius:24px;padding:38px 34px;
-    box-shadow:0 12px 40px rgba(0,0,0,.04);
-  }
-  .backup-card h2{font-size:24px;margin-bottom:18px;color:var(--text);display:flex;align-items:center;gap:12px}
-  .backup-card h2 .icon{color:var(--accent)}
-  .backup-card p{color:#475569;line-height:1.7;margin-bottom:14px;font-size:14px}
-  .backup-card ul{list-style:none;padding:0;margin:12px 0 20px}
-  .backup-card ul li{
-    padding:10px 0 10px 28px;border-bottom:1px solid var(--soft-2);
-    position:relative;color:#334155;font-size:14px;
-  }
-  .backup-card ul li::before{
-    content:'';position:absolute;left:0;top:14px;width:16px;height:16px;
-    background:#22c55e;border-radius:50%;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
-    background-size:10px;background-repeat:no-repeat;background-position:center;
-  }
-  .cloud-list{
-    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;
-  }
-  .cloud-item{
-    padding:14px 16px;border-radius:14px;
-    background:var(--soft);border:1px solid var(--line);
-    transition:all .12s;cursor:pointer;text-decoration:none;color:inherit;
-    display:flex;flex-direction:column;gap:4px;
-  }
-  .cloud-item:hover{background:#eff6ff;border-color:#bfdbfe;transform:translateY(-1px)}
-  .cloud-item b{color:var(--text);font-size:14px;display:flex;align-items:center;gap:6px}
-  .cloud-item b svg{color:var(--accent)}
-  .cloud-item span{font-size:12px;color:var(--muted)}
 
   /* ===== CHAT ===== */
-  #chat-screen{background:var(--panel);position:relative}
+  #chat-screen{background:#ffffff}
   .chat-header{
     display:flex;align-items:center;justify-content:space-between;
     padding:14px 24px;
-    border-bottom:1px solid var(--line-soft);
-    background:var(--panel);
+    border-bottom:1px solid #eef2f6;
+    background:#ffffff;
     position:sticky;top:0;z-index:10;
   }
   .chat-header-left{display:flex;align-items:center;gap:14px}
-  .chat-header-left .logo-mini{
+  .chat-header-left .ch-logo{
     width:34px;height:34px;border-radius:10px;
-    background:linear-gradient(135deg,var(--accent-2),var(--accent));
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
     display:flex;align-items:center;justify-content:center;
-    font-weight:800;font-size:16px;color:#fff;
+    font-weight:800;font-size:15px;color:#fff;
   }
-  .chat-header-left h2{font-size:16px;font-weight:600;color:var(--text)}
+  .chat-header-left h2{font-size:16px;font-weight:600;color:#0f172a}
   .chat-header-left .status-dot{
     width:8px;height:8px;border-radius:50%;background:#22c55e;
     box-shadow:0 0 8px rgba(34,197,94,.3);display:inline-block;margin-left:6px;
   }
   .chat-header-right{display:flex;align-items:center;gap:8px}
-
   .chat-body{
     flex:1;display:flex;flex-direction:column;
     max-width:820px;width:100%;margin:0 auto;
     padding:0 24px;
-    height:calc(100vh - 58px);
+    height:calc(100vh - 62px);
   }
   .chat-messages{
     flex:1;overflow-y:auto;padding:24px 0 8px;
@@ -246,8 +281,7 @@
   }
   .chat-messages::-webkit-scrollbar{width:4px}
   .chat-messages::-webkit-scrollbar-track{background:transparent}
-  .chat-messages::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
-
+  .chat-messages::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:99px}
   .welcome-message{
     text-align:center;padding:80px 20px 40px;flex:1;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -256,21 +290,22 @@
     width:64px;height:64px;border-radius:18px;
     background:linear-gradient(135deg,#eff6ff,#dbeafe);
     display:flex;align-items:center;justify-content:center;
-    margin-bottom:20px;border:1px solid #bfdbfe;color:var(--accent);
+    margin-bottom:20px;
+    border:1px solid #bfdbfe;
   }
-  .welcome-message h3{font-size:22px;font-weight:700;margin-bottom:8px;color:var(--text)}
-  .welcome-message p{color:var(--muted);font-size:14px;max-width:360px;line-height:1.6}
+  .welcome-message h3{font-size:22px;font-weight:700;margin-bottom:8px;color:#0f172a}
+  .welcome-message p{color:#64748b;font-size:14px;max-width:360px;line-height:1.6}
   .welcome-suggestions{
     display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px;
   }
   .welcome-suggestions button{
-    padding:8px 14px;border-radius:999px;border:1px solid var(--line);
-    background:var(--soft);color:#475569;font-size:13px;
-    cursor:pointer;transition:all .12s;display:inline-flex;align-items:center;gap:6px;
+    padding:8px 14px;border-radius:999px;border:1px solid #e2e8f0;
+    background:#f8fafc;color:#475569;font-size:13px;
+    cursor:pointer;transition:all .12s;
   }
-  .welcome-suggestions button:hover{background:#eff6ff;border-color:#bfdbfe;color:var(--accent)}
-  .welcome-suggestions button svg{width:14px;height:14px}
-
+  .welcome-suggestions button:hover{
+    background:#eff6ff;border-color:#bfdbfe;color:#2563eb;
+  }
   .msg{
     max-width:85%;padding:12px 16px;border-radius:16px;
     line-height:1.55;font-size:14px;white-space:pre-wrap;word-break:break-word;
@@ -278,103 +313,98 @@
   }
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
   .msg.user{
-    align-self:flex-end;background:#eff6ff;
-    border:1px solid #bfdbfe;color:#1e293b;
+    align-self:flex-end;
+    background:#eff6ff;border:1px solid #bfdbfe;color:#1e293b;
   }
   .msg.bot{
-    align-self:flex-start;background:var(--soft);
-    border:1px solid var(--line);
+    align-self:flex-start;
+    background:#f8fafc;border:1px solid #e2e8f0;
   }
   .msg.bot .bot-name{
-    font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px;display:flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:600;color:#2563eb;margin-bottom:4px;display:block;
   }
-  .msg.bot .bot-name svg{width:12px;height:12px}
-
   .chat-input-area{
-    padding:12px 0 20px;border-top:1px solid var(--line-soft);background:var(--panel);
+    padding:12px 0 20px;
+    border-top:1px solid #eef2f6;
+    background:#ffffff;
   }
   .chat-input-wrap{
     display:flex;align-items:flex-end;gap:10px;
-    background:var(--soft);border:1px solid var(--line);
-    border-radius:14px;padding:8px 8px 8px 18px;transition:border-color .15s;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:14px;padding:8px 8px 8px 18px;
+    transition:border-color .15s;
   }
   .chat-input-wrap:focus-within{
-    border-color:#93c5fd;box-shadow:0 0 0 3px rgba(59,130,246,.08);
+    border-color:#93c5fd;
+    box-shadow:0 0 0 3px rgba(59,130,246,.08);
   }
   .chat-input-wrap textarea{
     flex:1;background:transparent;border:none;outline:none;
-    color:var(--text);font:inherit;font-size:14px;
+    color:#0f172a;font:inherit;font-size:14px;
     resize:none;max-height:120px;padding:6px 0;line-height:1.4;
   }
   .chat-input-wrap textarea::placeholder{color:#94a3b8}
-  .chat-input-actions{display:flex;align-items:center;gap:6px}
+  .chat-input-actions{
+    display:flex;align-items:center;gap:6px;
+  }
   .chat-input-actions button{
     width:36px;height:36px;border-radius:10px;border:none;
     background:transparent;color:#94a3b8;cursor:pointer;
     display:flex;align-items:center;justify-content:center;
     transition:all .12s;
   }
-  .chat-input-actions button:hover{background:var(--line);color:#475569}
+  .chat-input-actions button:hover{background:#e2e8f0;color:#475569}
   .chat-input-actions .send-btn{
-    background:var(--accent);color:#fff;
+    background:#2563eb;color:#fff;
+    width:36px;height:36px;border-radius:10px;
     box-shadow:0 2px 8px rgba(37,99,235,.15);
   }
   .chat-input-actions .send-btn:hover{background:#1d4ed8;transform:scale(1.04)}
-  .chat-input-actions .send-btn svg{width:16px;height:16px}
 
   /* ===== SETTINGS ===== */
   .settings-overlay{
     position:fixed;inset:0;z-index:50;
-    background:rgba(0,0,0,.3);backdrop-filter:blur(2px);
+    background:rgba(0,0,0,.3);
     display:none;animation:fadeIn .15s;
   }
   .settings-overlay.open{display:block}
   .settings-panel{
     position:fixed;top:0;right:0;bottom:0;z-index:51;
-    width:min(400px,100vw);background:var(--panel);
-    border-left:1px solid var(--line);
-    padding:24px 20px;overflow-y:auto;display:none;
-    animation:slideIn .2s ease;
+    width:min(400px,100vw);background:#ffffff;
+    border-left:1px solid #e2e8f0;
+    padding:24px 20px;overflow-y:auto;
+    display:none;animation:slideIn .2s ease;
     box-shadow:-8px 0 30px rgba(0,0,0,.04);
   }
   .settings-panel.open{display:block}
   @keyframes slideIn{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
   .settings-panel h3{
-    font-size:18px;font-weight:700;margin-bottom:20px;color:var(--text);
+    font-size:18px;font-weight:700;margin-bottom:20px;color:#0f172a;
     display:flex;align-items:center;justify-content:space-between;
   }
-  .settings-panel h3 .title{display:flex;align-items:center;gap:10px}
-  .settings-panel h3 .title svg{color:var(--accent)}
   .settings-panel h3 button{
-    background:transparent;border:none;color:#94a3b8;
-    cursor:pointer;padding:4px 8px;border-radius:8px;
-    display:flex;align-items:center;
+    background:transparent;border:none;color:#94a3b8;cursor:pointer;padding:4px 8px;border-radius:8px;
   }
-  .settings-panel h3 button:hover{background:var(--soft-2);color:var(--text)}
+  .settings-panel h3 button:hover{background:#f1f5f9;color:#0f172a}
   .settings-group{margin-bottom:24px}
   .settings-group label{
-    display:block;font-size:11px;color:var(--muted);margin-bottom:8px;
-    text-transform:uppercase;letter-spacing:.5px;font-weight:600;
+    display:block;font-size:11px;color:#64748b;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;
   }
   .settings-row{
     display:flex;align-items:center;justify-content:space-between;
-    padding:12px 0;border-bottom:1px solid var(--soft-2);
+    padding:12px 0;border-bottom:1px solid #f1f5f9;
   }
   .settings-row:last-child{border-bottom:none}
-  .settings-row .left{flex:1;display:flex;align-items:center;gap:10px}
-  .settings-row .left .row-icon{
-    width:32px;height:32px;border-radius:8px;
-    background:var(--soft-2);color:var(--muted);
-    display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  }
+  .settings-row .left{flex:1}
   .settings-row .left b{display:block;font-size:14px;font-weight:500;margin-bottom:2px;color:#1e293b}
   .settings-row .left span{font-size:12px;color:#94a3b8}
   .toggle{
     width:42px;height:24px;border-radius:99px;
-    background:var(--line);cursor:pointer;
+    background:#e2e8f0;cursor:pointer;
     position:relative;transition:all .2s;flex-shrink:0;
   }
-  .toggle.on{background:var(--accent)}
+  .toggle.on{background:#2563eb}
   .toggle::after{
     content:'';position:absolute;top:2px;left:2px;
     width:20px;height:20px;border-radius:50%;
@@ -384,237 +414,148 @@
   .toggle.on::after{transform:translateX(18px)}
   .settings-input{
     width:100%;padding:10px 12px;border-radius:10px;
-    background:var(--soft);border:1px solid var(--line);
-    color:var(--text);font:inherit;font-size:13px;outline:none;
+    background:#f8fafc;border:1px solid #e2e8f0;
+    color:#0f172a;font:inherit;font-size:13px;outline:none;
   }
   .settings-input:focus{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(59,130,246,.08)}
   .settings-btn{
     width:100%;padding:12px;border-radius:12px;
-    background:var(--accent);color:#fff;font-weight:600;font-size:14px;
+    background:#2563eb;color:#fff;font-weight:600;font-size:14px;
     border:none;cursor:pointer;margin-top:8px;transition:all .12s;
-    display:flex;align-items:center;justify-content:center;gap:8px;
   }
   .settings-btn:hover{background:#1d4ed8}
   .settings-btn.outline{
-    background:transparent;border:1px solid var(--line);color:#475569;
+    background:transparent;border:1px solid #e2e8f0;color:#475569;
   }
-  .settings-btn.outline:hover{background:var(--soft);color:var(--text);border-color:#cbd5e1}
+  .settings-btn.outline:hover{background:#f8fafc;color:#0f172a;border-color:#cbd5e1}
   .status-badge{
     display:inline-flex;align-items:center;gap:6px;
     font-size:12px;padding:4px 10px;border-radius:999px;
     background:#f0f9ff;color:#0369a1;border:1px solid #bae6fd;
   }
-  .status-badge .dot{width:6px;height:6px;border-radius:50%;background:#94a3b8}
-  .status-badge.ok .dot{background:#22c55e}
-  .status-badge.trial .dot{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.4)}
-  .status-badge.expired .dot{background:#ef4444}
 
   .toast{
     position:fixed;bottom:24px;right:24px;z-index:100;
     padding:12px 18px;border-radius:14px;
-    background:var(--panel);border:1px solid var(--line);
-    color:var(--text);font-size:14px;
+    background:#ffffff;border:1px solid #e2e8f0;
+    color:#0f172a;font-size:14px;
     display:none;animation:fadeIn .2s;
     box-shadow:0 8px 30px rgba(0,0,0,.08);
   }
   .toast.show{display:block}
+  .hidden{display:none!important}
 
-  @media(max-width:768px){
-    .home-sidebar{width:100%;min-height:auto;padding:16px}
-    #home-screen{flex-direction:column}
-    .home-main{padding:24px 16px}
+  @media(max-width:600px){
+    .side-menu{width:100%}
+    .home-content{padding:40px 16px}
     .home-card{padding:28px 20px}
     .home-card h1{font-size:24px}
-    .cloud-list{grid-template-columns:1fr}
-    .backup-card{padding:24px 18px}
-    .chat-body{height:calc(100vh - 56px);padding:0 12px}
+    .auth-card{padding:28px 20px}
+    .chat-body{height:calc(100vh - 58px);padding:0 12px}
     .settings-panel{width:100%}
   }
 </style>
 </head>
 <body>
 
-<!-- ===== ICON LIBRARY (hidden) ===== -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </symbol>
-    <symbol id="i-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2v.3h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/>
-    </symbol>
-    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
-    </symbol>
-    <symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M9 2v6M15 2v6"/><path d="M5 8h14l-1 4a6 6 0 0 1-12 0z"/><path d="M12 18v4"/>
-    </symbol>
-    <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-    </symbol>
-    <symbol id="i-devices" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="3" width="14" height="11" rx="2"/><path d="M2 17h14"/><rect x="18" y="9" width="4" height="11" rx="1"/>
-    </symbol>
-    <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-    </symbol>
-    <symbol id="i-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M14.7 6.3a4 4 0 1 1-5.4 5.4l-6 6V21h3.4l6-6a4 4 0 0 1 5.4-5.4l-2.4 2.4 2 2 2.4-2.4a4 4 0 0 1-5.4-5.4z"/>
-    </symbol>
-    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-    </symbol>
-    <symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2a4 4 0 0 0-4 4v.5a3 3 0 0 0-3 3v.5a3 3 0 0 0 1 5.66V18a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4h0a4 4 0 0 0 4-4v-2.34A3 3 0 0 0 19 10v-.5a3 3 0 0 0-3-3V6a4 4 0 0 0-4-4z"/><path d="M12 6v14"/>
-    </symbol>
-    <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
-    </symbol>
-    <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-    </symbol>
-    <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
-    </symbol>
-    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
-    </symbol>
-    <symbol id="i-id" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2M15 12h2M7 16h10"/>
-    </symbol>
-    <symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
-    </symbol>
-    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-    </symbol>
-    <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
-    </symbol>
-    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-    </symbol>
-    <symbol id="i-paperclip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-    </symbol>
-    <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-    </symbol>
-    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="20 6 9 17 4 12"/>
-    </symbol>
-    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-    </symbol>
-    <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-    </symbol>
-    <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
-    </symbol>
-    <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
-    </symbol>
-    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-    </symbol>
-    <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-    </symbol>
-    <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-    </symbol>
-    <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>
-    </symbol>
-    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-    </symbol>
-    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-    </symbol>
-    <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-    </symbol>
-    <symbol id="i-broom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M19.36 2.72l1.92 1.92-5.4 5.4-1.92-1.92zM14.4 7.68L4 18l-2 4 4-2L16.32 9.6"/>
-    </symbol>
-    <symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/><path d="M19 14l.7 2.1L22 17l-2.3.9L19 20l-.7-2.1L16 17l2.3-.9z"/>
-    </symbol>
-    <symbol id="i-price" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-    </symbol>
-  </defs>
-</svg>
+<!-- ===== AUTH SCREEN ===== -->
+<div id="auth-screen" class="screen active">
+  <div class="auth-card">
+    <div class="auth-logo">A</div>
+    <h1>Welcome to Autora AI</h1>
+    <p class="subtitle">Sign up for a free trial — 6 hours of full access, 25 scrapes, no credit card.</p>
 
-<!-- ===== HOME ===== -->
-<div id="home-screen" class="screen active">
-  <div class="home-sidebar">
-    <div class="logo-area">
-      <div class="logo">A</div>
-      <div>
-        <h2>Autora AI</h2>
-        <p>Business control plane</p>
-      </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-auth="signup">Sign Up</button>
+      <button class="auth-tab" data-auth="login">Log In</button>
     </div>
 
-    <div class="dropdown-group">
-      <button class="dropdown-header" data-dropdown="chat-dd">
-        <span style="display:flex;align-items:center;gap:10px"><svg class="icn"><use href="#i-chat"/></svg> Chat</span>
-        <span class="arrow"><svg class="icn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-      </button>
-      <div class="dropdown-content open" id="chat-dd">
-        <button class="dropdown-item active" data-action="chat"><span class="icon"><svg class="icn"><use href="#i-chat"/></svg></span> Start chatting</button>
-        <button class="dropdown-item" data-action="suggestions"><span class="icon"><svg class="icn"><use href="#i-lightbulb"/></svg></span> Suggestions</button>
-        <button class="dropdown-item" data-action="clear-chat"><span class="icon"><svg class="icn"><use href="#i-trash"/></svg></span> Clear chat</button>
+    <div class="auth-error" id="authError"></div>
+    <div class="auth-success" id="authSuccess"></div>
+
+    <div id="authSignup">
+      <div class="auth-field">
+        <label>Full name</label>
+        <input id="signupName" placeholder="John Smith" />
       </div>
+      <div class="auth-field">
+        <label>Email address</label>
+        <input id="signupEmail" type="email" placeholder="you@business.com" />
+      </div>
+      <div class="auth-field">
+        <label>Company (optional)</label>
+        <input id="signupCompany" placeholder="Your company name" />
+      </div>
+      <button class="auth-btn" id="signupBtn">Start 6-Hour Free Trial</button>
     </div>
 
-    <div class="dropdown-group">
-      <button class="dropdown-header" data-dropdown="sys-dd">
-        <span style="display:flex;align-items:center;gap:10px"><svg class="icn"><use href="#i-plug"/></svg> System</span>
-        <span class="arrow"><svg class="icn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-      </button>
-      <div class="dropdown-content" id="sys-dd">
-        <button class="dropdown-item" data-action="sync"><span class="icon"><svg class="icn"><use href="#i-refresh"/></svg></span> Sync device</button>
-        <button class="dropdown-item" data-action="devices"><span class="icon"><svg class="icn"><use href="#i-devices"/></svg></span> My devices</button>
-        <button class="dropdown-item" data-action="health"><span class="icon"><svg class="icn"><use href="#i-heart"/></svg></span> Heartbeat</button>
+    <div id="authLogin" class="hidden">
+      <div class="auth-field">
+        <label>Email address</label>
+        <input id="loginEmail" type="email" placeholder="you@business.com" />
       </div>
+      <button class="auth-btn" id="loginBtn">Log In &amp; Resume Trial</button>
+      <p style="font-size:13px;color:#64748b;margin-top:12px">We'll look up your existing trial by email + device fingerprint.</p>
     </div>
 
-    <div class="dropdown-group">
-      <button class="dropdown-header" data-dropdown="tools-dd">
-        <span style="display:flex;align-items:center;gap:10px"><svg class="icn"><use href="#i-wrench"/></svg> Tools</span>
-        <span class="arrow"><svg class="icn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-      </button>
-      <div class="dropdown-content" id="tools-dd">
-        <button class="dropdown-item" data-action="runbooks"><span class="icon"><svg class="icn"><use href="#i-book"/></svg></span> Runbooks</button>
-        <button class="dropdown-item" data-action="memory"><span class="icon"><svg class="icn"><use href="#i-brain"/></svg></span> Memory</button>
-        <button class="dropdown-item" data-action="scraper"><span class="icon"><svg class="icn"><use href="#i-target"/></svg></span> Lead scraper</button>
-      </div>
-    </div>
+    <div class="auth-divider"></div>
+    <p class="terms">No credit card needed. Trial is locked to your device for security.</p>
+  </div>
+</div>
 
-    <div class="dropdown-group">
-      <button class="dropdown-header" data-dropdown="acct-dd">
-        <span style="display:flex;align-items:center;gap:10px"><svg class="icn"><use href="#i-gear"/></svg> Account</span>
-        <span class="arrow"><svg class="icn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
-      </button>
-      <div class="dropdown-content" id="acct-dd">
-        <button class="dropdown-item" data-action="settings"><span class="icon"><svg class="icn"><use href="#i-gear"/></svg></span> Settings</button>
-        <button class="dropdown-item" data-action="backup"><span class="icon"><svg class="icn"><use href="#i-cloud"/></svg></span> Backups</button>
-        <button class="dropdown-item" data-action="pricing"><span class="icon"><svg class="icn"><use href="#i-price"/></svg></span> Pricing</button>
-      </div>
+<!-- ===== HOME SCREEN ===== -->
+<div id="home-screen" class="screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" id="menuToggle">MENU</button>
+      <div class="logo-small">A</div>
+      <h2>Autora AI</h2>
     </div>
-
-    <div class="sidebar-footer">
-      <button id="sidebarHomeBtn"><span class="icon"><svg class="icn"><use href="#i-home"/></svg></span> Home</button>
-      <button id="sidebarSettingsBtn"><span class="icon"><svg class="icn"><use href="#i-gear"/></svg></span> Settings</button>
-      <button id="sidebarTrialBtn"><span class="icon"><svg class="icn"><use href="#i-rocket"/></svg></span> Activate trial</button>
+    <div class="topbar-right">
+      <span class="status-badge" id="topStatus">Not active</span>
+      <button class="btn-icon" id="topSettingsBtn">S</button>
     </div>
   </div>
 
-  <div class="home-main">
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <div class="side-menu" id="sideMenu">
+    <div class="side-menu-header">
+      <div class="logo-area">
+        <div class="mlogo">A</div>
+        <h3>Autora AI</h3>
+      </div>
+      <button class="close-menu" id="closeMenu">X</button>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-section-title">Main</div>
+      <button class="menu-item active" data-action="home"><span class="mi-icon">[H]</span> Home</button>
+      <button class="menu-item" data-action="chat"><span class="mi-icon">[C]</span> Chat</button>
+      <button class="menu-item" data-action="sync"><span class="mi-icon">[S]</span> Sync System</button>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-section-title">Tools</div>
+      <button class="menu-item" data-action="runbooks"><span class="mi-icon">[R]</span> Runbooks</button>
+      <button class="menu-item" data-action="memory"><span class="mi-icon">[M]</span> Memory</button>
+      <button class="menu-item" data-action="scraper"><span class="mi-icon">[L]</span> Lead Scraper</button>
+      <button class="menu-item" data-action="devices"><span class="mi-icon">[D]</span> My Devices</button>
+      <button class="menu-item" data-action="health"><span class="mi-icon">[+]</span> Heartbeat</button>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-section-title">Account</div>
+      <button class="menu-item" data-action="settings"><span class="mi-icon">[*]</span> Settings</button>
+      <button class="menu-item" data-action="backup"><span class="mi-icon">[B]</span> Backups</button>
+      <button class="menu-item" data-action="pricing"><span class="mi-icon">[$]</span> Pricing</button>
+    </div>
+
+    <div class="menu-footer">
+      <button class="menu-item" data-action="logout" style="color:#ef4444"><span class="mi-icon">[!]</span> Log out</button>
+    </div>
+  </div>
+
+  <div class="home-content">
     <div class="home-card">
       <h1>Your business, <span>connected.</span> From your phone.</h1>
       <div class="home-text">
@@ -624,17 +565,17 @@
         But Autora doesn't just send messages. <strong>It can interact with your system, execute tasks, run commands, access your tools, and help you operate your computer or server</strong> — all from your phone.
       </div>
       <div class="home-pills">
-        <span class="pill"><svg><use href="#i-chat"/></svg> AI Chat</span>
-        <span class="pill"><svg><use href="#i-plug"/></svg> System Control</span>
-        <span class="pill"><svg><use href="#i-brain"/></svg> Memory</span>
-        <span class="pill"><svg><use href="#i-book"/></svg> Runbooks</span>
-        <span class="pill"><svg><use href="#i-heart"/></svg> Heartbeat</span>
-        <span class="pill"><svg><use href="#i-target"/></svg> Scraper</span>
+        <span class="pill">AI Chat</span>
+        <span class="pill">System Control</span>
+        <span class="pill">Memory</span>
+        <span class="pill">Runbooks</span>
+        <span class="pill">Heartbeat</span>
+        <span class="pill">Scraper</span>
       </div>
       <div class="home-divider"></div>
       <div class="home-buttons">
-        <button class="btn btn-primary" id="startChatBtn"><svg class="icn-18"><use href="#i-chat"/></svg> Start Chat</button>
-        <button class="btn btn-secondary" id="syncSystemBtn"><svg class="icn-18"><use href="#i-refresh"/></svg> Sync System</button>
+        <button class="btn btn-primary" id="startChatBtn">Start Chat</button>
+        <button class="btn btn-secondary" id="syncSystemBtn">Sync System</button>
       </div>
     </div>
   </div>
@@ -642,40 +583,50 @@
 
 <!-- ===== BACKUP ===== -->
 <div id="backup-screen" class="screen">
-  <div style="max-width:720px;width:100%;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-      <button class="btn btn-ghost btn-sm" id="backupBackBtn"><svg class="icn"><use href="#i-arrow-left"/></svg> Back</button>
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="btn btn-ghost btn-sm" id="backupBackBtn2" style="font-size:14px">&larr; Back</button>
+      <h2 style="font-size:16px;font-weight:600">Backup Safety</h2>
     </div>
-    <div class="backup-card">
-      <h2><span class="icon"><svg class="icn-22"><use href="#i-shield"/></svg></span> Backup First — Safety Matters</h2>
-      <p>Before connecting any system to Autora, we <strong>strongly recommend</strong> ensuring your devices have proper backups. This protects your data against accidental changes, hardware failure, or unexpected issues during remote operations.</p>
-      <p>Backups can be done <strong>locally</strong> (external drive, NAS) or in the <strong>cloud</strong>. Here are trusted cloud backup providers:</p>
-      <div class="cloud-list">
-        <a class="cloud-item" href="https://backblaze.com" target="_blank" rel="noopener">
-          <b><svg class="icn"><use href="#i-cloud"/></svg> Backblaze</b>
-          <span>Unlimited cloud backup · $9/mo</span>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:24px">
+    <div class="backup-card" style="max-width:720px;width:100%;background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:38px 34px;box-shadow:0 12px 40px rgba(0,0,0,.04)">
+      <h2 style="font-size:24px;margin-bottom:18px;color:#0f172a">Backup First — Safety Matters</h2>
+      <p style="color:#475569;line-height:1.7;margin-bottom:14px;font-size:14px">
+        Before connecting any system to Autora, we <strong>strongly recommend</strong> ensuring your devices have proper backups.
+        This protects your data against accidental changes, hardware failure, or unexpected issues during remote operations.
+      </p>
+      <p style="color:#475569;line-height:1.7;margin-bottom:14px;font-size:14px">
+        Backups can be done <strong>locally</strong> (external drive, NAS) or in the <strong>cloud</strong>.
+        Here are trusted cloud backup providers:
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0">
+        <a class="cloud-item" href="https://backblaze.com" target="_blank" rel="noopener" style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;transition:all .12s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px">
+          <b style="color:#0f172a;font-size:14px">Backblaze</b>
+          <span style="font-size:12px;color:#64748b">Unlimited cloud backup · $9/mo</span>
         </a>
-        <a class="cloud-item" href="https://www.backblaze.com/cloud-backup" target="_blank" rel="noopener">
-          <b><svg class="icn"><use href="#i-box"/></svg> B2 Cloud Storage</b>
-          <span>$0.006/GB/mo · Server-friendly</span>
+        <a class="cloud-item" href="https://www.backblaze.com/cloud-backup" target="_blank" rel="noopener" style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;transition:all .12s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px">
+          <b style="color:#0f172a;font-size:14px">B2 Cloud Storage</b>
+          <span style="font-size:12px;color:#64748b">$0.006/GB/mo · Server-friendly</span>
         </a>
-        <a class="cloud-item" href="https://idrive.com" target="_blank" rel="noopener">
-          <b><svg class="icn"><use href="#i-id"/></svg> IDrive</b>
-          <span>5TB for $79/yr · Multi-platform</span>
+        <a class="cloud-item" href="https://idrive.com" target="_blank" rel="noopener" style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;transition:all .12s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px">
+          <b style="color:#0f172a;font-size:14px">IDrive</b>
+          <span style="font-size:12px;color:#64748b">5TB for $79/yr · Multi-platform</span>
         </a>
-        <a class="cloud-item" href="https://rsync.net" target="_blank" rel="noopener">
-          <b><svg class="icn"><use href="#i-up"/></svg> rsync.net</b>
-          <span>Enterprise · SSH · From $0.04/GB/mo</span>
+        <a class="cloud-item" href="https://rsync.net" target="_blank" rel="noopener" style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;transition:all .12s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px">
+          <b style="color:#0f172a;font-size:14px">rsync.net</b>
+          <span style="font-size:12px;color:#64748b">Enterprise · SSH · From $0.04/GB/mo</span>
         </a>
       </div>
-      <ul>
-        <li>Every system should have verified, restorable backups</li>
-        <li>Test a restore — not just a backup "success" message</li>
-        <li>3-2-1 rule: 3 copies, 2 media types, 1 offsite</li>
-        <li>Autora helps automate backup checks with Runbooks</li>
+      <ul style="list-style:none;padding:0;margin:12px 0 20px">
+        <li style="padding:10px 0 10px 28px;border-bottom:1px solid #f1f5f9;position:relative;color:#334155;font-size:14px">&check; Every system should have verified, restorable backups</li>
+        <li style="padding:10px 0 10px 28px;border-bottom:1px solid #f1f5f9;position:relative;color:#334155;font-size:14px">&check; Test a restore — not just a backup "success" message</li>
+        <li style="padding:10px 0 10px 28px;border-bottom:1px solid #f1f5f9;position:relative;color:#334155;font-size:14px">&check; 3-2-1 rule: 3 copies, 2 media types, 1 offsite</li>
+        <li style="padding:10px 0 10px 28px;position:relative;color:#334155;font-size:14px">&check; Autora helps automate backup checks with Runbooks</li>
       </ul>
       <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-        <button class="btn btn-primary" id="backupProceedBtn"><svg class="icn-18"><use href="#i-check"/></svg> I have backups — proceed</button>
+        <button class="btn btn-primary" id="backupProceedBtn">I have backups — proceed</button>
+        <button class="btn btn-ghost" id="backupBackBtn">&larr; Go back</button>
       </div>
     </div>
   </div>
@@ -685,36 +636,47 @@
 <div id="chat-screen" class="screen">
   <div class="chat-header">
     <div class="chat-header-left">
-      <div class="logo-mini">A</div>
+      <button class="hamburger" id="chatMenuToggle">MENU</button>
+      <div class="ch-logo">A</div>
       <h2>Autora AI <span class="status-dot"></span></h2>
     </div>
     <div class="chat-header-right">
-      <button class="btn-icon" id="homeBtn" title="Home"><svg class="icn"><use href="#i-home"/></svg></button>
-      <button class="btn-icon" id="settingsBtn" title="Settings"><svg class="icn"><use href="#i-gear"/></svg></button>
+      <button class="btn-icon" id="chatSettingsBtn">S</button>
     </div>
   </div>
-
   <div class="chat-body">
     <div class="chat-messages" id="chatMessages">
       <div class="welcome-message" id="welcomeMsg">
-        <div class="welcome-icon"><svg class="icn-28" style="color:var(--accent)"><use href="#i-sparkle"/></svg></div>
+        <div class="welcome-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v6m0 10v6m11-11h-6M7 12H1m15.5-7.5l-4.2 4.2M9.7 14.3l-4.2 4.2m0-12.4l4.2 4.2m4.6 4.6l4.2 4.2"/>
+          </svg>
+        </div>
         <h3>How can I help you today?</h3>
         <p>System control, monitoring, automation — all from your phone.</p>
         <div class="welcome-suggestions">
-          <button data-q="Check my system status and give me a summary."><svg><use href="#i-chart"/></svg> Status</button>
-          <button data-q="Show me a server health checklist."><svg><use href="#i-check"/></svg> Health</button>
-          <button data-q="Help me automate daily backup verification."><svg><use href="#i-cloud"/></svg> Backups</button>
-          <button data-q="Connect my Linux server via SSH."><svg><use href="#i-plug"/></svg> Connect</button>
+          <button data-q="Check my system status and give me a summary.">Status</button>
+          <button data-q="Show me a server health checklist.">Health</button>
+          <button data-q="Help me automate daily backup verification.">Backups</button>
+          <button data-q="Connect my Linux server via SSH.">Connect</button>
         </div>
       </div>
     </div>
-
     <div class="chat-input-area">
       <div class="chat-input-wrap">
         <textarea id="chatInput" rows="1" placeholder="Ask Autora anything..."></textarea>
         <div class="chat-input-actions">
-          <button id="attachBtn" title="Attach file"><svg class="icn"><use href="#i-paperclip"/></svg></button>
-          <button class="send-btn" id="sendBtn" title="Send"><svg><use href="#i-send"/></svg></button>
+          <button id="attachBtn" title="Attach file">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+            </svg>
+          </button>
+          <button class="send-btn" id="sendBtn" title="Send">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -724,97 +686,69 @@
 <!-- ===== SETTINGS ===== -->
 <div class="settings-overlay" id="settingsOverlay"></div>
 <div class="settings-panel" id="settingsPanel">
-  <h3>
-    <span class="title"><svg class="icn-22"><use href="#i-gear"/></svg> Settings</span>
-    <button id="closeSettingsBtn"><svg class="icn"><use href="#i-x"/></svg></button>
-  </h3>
-
+  <h3>Settings <button id="closeSettingsBtn">X</button></h3>
   <div class="settings-group">
     <label>Account</label>
     <div class="settings-row">
-      <div class="left">
-        <div class="row-icon"><svg class="icn"><use href="#i-key"/></svg></div>
-        <div><b>Status</b><span>Plan &amp; trial info</span></div>
-      </div>
-      <span id="settingsPlan" class="status-badge"><span class="dot"></span><span id="settingsPlanText">Not activated</span></span>
+      <div class="left"><b>Status</b></div>
+      <span id="settingsPlan" class="status-badge">Not activated</span>
     </div>
     <div class="settings-row">
-      <div class="left">
-        <div class="row-icon"><svg class="icn"><use href="#i-id"/></svg></div>
-        <div><b>Email</b><span>Used for activation</span></div>
-      </div>
+      <div class="left"><b>Email</b></div>
       <input class="settings-input" id="settingsEmail" placeholder="you@business.com" style="width:180px" />
     </div>
   </div>
-
   <div class="settings-group">
     <label>Connection</label>
-    <div class="settings-row" style="display:block">
-      <div class="left" style="margin-bottom:8px">
-        <div class="row-icon"><svg class="icn"><use href="#i-link"/></svg></div>
-        <div><b>Backend URL</b><span>Your Autora server</span></div>
-      </div>
-      <input class="settings-input" id="settingsBackend" placeholder="https://..." style="font-size:11px" />
+    <div class="settings-row">
+      <div class="left"><b>Backend URL</b></div>
+      <input class="settings-input" id="settingsBackend" placeholder="https://..." style="width:180px;font-size:11px" />
     </div>
-    <button class="settings-btn outline" id="testBackendBtn"><svg class="icn"><use href="#i-search"/></svg> Test backend</button>
-    <button class="settings-btn" id="activateBtnSettings"><svg class="icn"><use href="#i-rocket"/></svg> Activate free trial</button>
+    <button class="settings-btn outline" id="testBackendBtn">Test backend</button>
+    <button class="settings-btn outline" id="refreshUsageBtn">Refresh usage</button>
   </div>
-
   <div class="settings-group">
     <label>Features</label>
     <div class="settings-row">
-      <div class="left">
-        <div class="row-icon" style="color:#ef4444;background:#fef2f2"><svg class="icn"><use href="#i-heart"/></svg></div>
-        <div><b>Heartbeat</b><span>Regular alive checks</span></div>
-      </div>
+      <div class="left"><b>Heartbeat</b><span>Regular alive checks</span></div>
       <div class="toggle on" id="heartbeatToggle"></div>
     </div>
     <div class="settings-row">
-      <div class="left">
-        <div class="row-icon" style="color:#8b5cf6;background:#f3e8ff"><svg class="icn"><use href="#i-book"/></svg></div>
-        <div><b>Runbooks</b><span>Scheduled automation</span></div>
-      </div>
+      <div class="left"><b>Runbooks</b><span>Scheduled automation</span></div>
       <div class="toggle on" id="runbooksToggle"></div>
     </div>
     <div class="settings-row">
-      <div class="left">
-        <div class="row-icon" style="color:#f59e0b;background:#fffbeb"><svg class="icn"><use href="#i-brain"/></svg></div>
-        <div><b>Memory</b><span>Remember business facts</span></div>
-      </div>
+      <div class="left"><b>Memory</b><span>Remember business facts</span></div>
       <div class="toggle on" id="memoryToggle"></div>
     </div>
     <div class="settings-row">
-      <div class="left">
-        <div class="row-icon" style="color:#10b981;background:#ecfdf5"><svg class="icn"><use href="#i-bell"/></svg></div>
-        <div><b>Notifications</b><span>Alert on heartbeat failure</span></div>
-      </div>
+      <div class="left"><b>Notifications</b><span>Alert on heartbeat failure</span></div>
       <div class="toggle" id="notifToggle"></div>
     </div>
   </div>
-
   <div class="settings-group">
     <label>Data</label>
-    <button class="settings-btn outline" id="clearChatBtn"><svg class="icn"><use href="#i-broom"/></svg> Clear chat history</button>
-    <button class="settings-btn outline" style="margin-top:6px" id="logoutBtnSettings"><svg class="icn"><use href="#i-x"/></svg> Log out</button>
+    <button class="settings-btn outline" id="clearChatBtn">Clear chat history</button>
+    <button class="settings-btn outline" style="margin-top:6px" id="logoutBtnSettings">Log out</button>
   </div>
-
-  <pre id="settingsDebug" style="margin-top:16px;font-size:11px;color:#94a3b8;background:var(--soft);padding:10px;border-radius:10px;max-height:120px;overflow:auto;display:none;border:1px solid var(--line)"></pre>
+  <pre id="settingsDebug" style="margin-top:16px;font-size:11px;color:#94a3b8;background:#f8fafc;padding:10px;border-radius:10px;max-height:120px;overflow:auto;display:none;border:1px solid #e2e8f0"></pre>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== STATE =====
 const DEFAULT_BACKEND = localStorage.getItem("autora_backend") || "https://cc7447d26e43c651-82-132-222-65.serveousercontent.com";
 const state = {
   backend: DEFAULT_BACKEND,
   token: localStorage.getItem("autora_token") || "",
   email: localStorage.getItem("autora_email") || "",
+  name: localStorage.getItem("autora_name") || "",
   fingerprint: localStorage.getItem("autora_fp") || "",
   usage: null,
   history: [],
   pulseTimer: null,
-  settingsOpen: false
+  settingsOpen: false,
+  menuOpen: false
 };
 
 const $ = s => document.querySelector(s);
@@ -826,100 +760,119 @@ function showScreen(id) {
   if (el) el.classList.add("active");
   if (id === "chat-screen") startPulsePoll();
   else stopPulsePoll();
+  closeMenu();
 }
 
 function toast(msg, ms = 2800) {
   const t = $("#toast");
-  t.textContent = msg;
-  t.classList.add("show");
+  t.textContent = msg; t.classList.add("show");
   clearTimeout(window._toastTimer);
   window._toastTimer = setTimeout(() => t.classList.remove("show"), ms);
 }
 
 async function fingerprint() {
   if (state.fingerprint) return state.fingerprint;
-  const parts = [
-    navigator.userAgent, navigator.language,
-    screen.width + "x" + screen.height + "x" + screen.colorDepth,
-    Intl.DateTimeFormat().resolvedOptions().timeZone || "",
-    navigator.hardwareConcurrency || "", navigator.platform || ""
-  ].join("|");
+  const parts = [navigator.userAgent, navigator.language, screen.width+"x"+screen.height+"x"+screen.colorDepth, Intl.DateTimeFormat().resolvedOptions().timeZone||"", navigator.hardwareConcurrency||"", navigator.platform||""].join("|");
   const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(parts));
-  state.fingerprint = [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 32);
+  state.fingerprint = [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,"0")).join("").slice(0,32);
   localStorage.setItem("autora_fp", state.fingerprint);
   return state.fingerprint;
 }
 function saveLocal() {
   localStorage.setItem("autora_backend", state.backend);
-  localStorage.setItem("autora_token", state.token || "");
-  localStorage.setItem("autora_email", state.email || "");
+  localStorage.setItem("autora_token", state.token||"");
+  localStorage.setItem("autora_email", state.email||"");
+  localStorage.setItem("autora_name", state.name||"");
 }
 function clearSession() {
-  state.token = ""; state.usage = null; state.history = [];
+  state.token=""; state.usage=null; state.history=[];
   localStorage.removeItem("autora_token");
+  renderSettings(); renderTopStatus();
   toast("Logged out");
-  renderSettings();
 }
-function norm(u) { return String(u || "").trim().replace(/\/$/, ""); }
-function msClock(ms) {
-  if (ms == null) return "—";
-  const s = Math.max(0, Math.floor(ms / 1000));
-  return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m ${s % 60}s`;
+function norm(u){return String(u||"").trim().replace(/\/$/,"")}
+function msClock(ms){
+  if(ms==null)return"—";
+  const s=Math.max(0,Math.floor(ms/1000));
+  return `${Math.floor(s/3600)}h ${Math.floor((s%3600)/60)}m ${s%60}s`;
 }
 
-function renderSettings() {
-  const u = state.usage;
-  const badge = $("#settingsPlan");
-  const text = $("#settingsPlanText");
-  badge.className = "status-badge";
-  if (u) {
-    if (u.plan === "trial" && u.trialOpen) {
-      badge.classList.add("trial");
-      text.textContent = "Trial · " + msClock(u.msLeft);
-    } else if (u.plan === "trial") {
-      badge.classList.add("expired");
-      text.textContent = "Expired";
-    } else {
-      badge.classList.add("ok");
-      text.textContent = u.plan;
-    }
+function renderTopStatus(){
+  const u=state.usage;
+  const el=$("#topStatus");
+  if(u&&(u.trialOpen||u.plan!=="trial")){
+    if(u.plan==="trial") el.textContent=`Trial · ${msClock(u.msLeft)}`;
+    else el.textContent=`${u.planMeta?.name||u.plan}`;
+    el.className="status-badge";
+  } else if(u){
+    el.textContent="Expired"; el.className="status-badge";
   } else {
-    text.textContent = "Not activated";
+    el.textContent="Not active"; el.className="status-badge";
   }
-  $("#settingsEmail").value = state.email || "";
-  $("#settingsBackend").value = state.backend;
+}
+function renderSettings(){
+  const u=state.usage;
+  const el=$("#settingsPlan");
+  if(u&&(u.trialOpen||u.plan!=="trial")) el.textContent=u.plan==="trial"?`Trial · ${msClock(u.msLeft)}`:`${u.planMeta?.name||u.plan}`;
+  else if(u) el.textContent="Expired";
+  else el.textContent="Not activated";
+  el.className="status-badge";
+  $("#settingsEmail").value=state.email||"";
+  $("#settingsBackend").value=state.backend;
 }
 
-function toggleSettings(open) {
-  state.settingsOpen = open !== undefined ? open : !state.settingsOpen;
-  $("#settingsOverlay").classList.toggle("open", state.settingsOpen);
-  $("#settingsPanel").classList.toggle("open", state.settingsOpen);
-  if (state.settingsOpen) renderSettings();
+function toggleSettings(open){
+  state.settingsOpen=open!==undefined?open:!state.settingsOpen;
+  $("#settingsOverlay").classList.toggle("open",state.settingsOpen);
+  $("#settingsPanel").classList.toggle("open",state.settingsOpen);
+  if(state.settingsOpen) renderSettings();
 }
 
-async function api(path, opts = {}) {
+function openMenu(){
+  state.menuOpen=true;
+  $("#sideMenu").classList.add("open");
+  $("#menuOverlay").classList.add("open");
+}
+function closeMenu(){
+  state.menuOpen=false;
+  $("#sideMenu").classList.remove("open");
+  $("#menuOverlay").classList.remove("open");
+}
+
+async function api(path, opts={}) {
   if (!state.backend) throw new Error("Backend URL missing");
-  const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
+  const headers = Object.assign({"Content-Type":"application/json"}, opts.headers||{});
   if (state.token) headers.Authorization = `Bearer ${state.token}`;
   let r;
-  try { r = await fetch(state.backend + path, { ...opts, headers }); }
+  try { r = await fetch(state.backend+path, {...opts, headers}); }
   catch { throw new Error("Cannot reach backend — check tunnel/URL/CORS"); }
-  const data = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(data.error?.message || data.error || data.message || r.statusText);
+  const data = await r.json().catch(()=>({}));
+  if (!r.ok) throw new Error(data.error?.message||data.error||data.message||r.statusText);
   return data;
 }
 
-async function activate(email) {
-  email = String(email || "").trim().toLowerCase();
-  if (!email || !email.includes("@")) throw new Error("Valid email required");
+async function activate(email, name) {
+  email = String(email||"").trim().toLowerCase();
+  if (!email||!email.includes("@")) throw new Error("Valid email required");
+  state.email = email;
+  state.name = name || "";
+  const fp = await fingerprint();
+  const data = await api("/api/trial/start", {method:"POST", body:JSON.stringify({email, fingerprint:fp})});
+  state.token = data.token; state.usage = data.usage; saveLocal();
+  renderSettings(); renderTopStatus();
+  toast(data.resumed? "Trial resumed" : "Trial activated");
+  return data;
+}
+
+async function resumeTrial(email) {
+  email = String(email||"").trim().toLowerCase();
+  if (!email||!email.includes("@")) throw new Error("Valid email required");
   state.email = email;
   const fp = await fingerprint();
-  const data = await api("/api/trial/start", { method: "POST", body: JSON.stringify({ email, fingerprint: fp }) });
-  state.token = data.token;
-  state.usage = data.usage;
-  saveLocal();
-  renderSettings();
-  toast(data.resumed ? "Trial resumed" : "Trial activated");
+  const data = await api("/api/trial/start", {method:"POST", body:JSON.stringify({email, fingerprint:fp})});
+  state.token = data.token; state.usage = data.usage; saveLocal();
+  renderSettings(); renderTopStatus();
+  toast(data.resumed? "Welcome back" : "Trial activated");
   return data;
 }
 
@@ -929,7 +882,7 @@ function addMsg(role, text) {
   if (welcome && !welcome.classList.contains("hidden")) welcome.classList.add("hidden");
   const d = document.createElement("div");
   d.className = "msg " + role;
-  if (role === "bot") d.innerHTML = `<span class="bot-name"><svg><use href="#i-sparkle"/></svg> Autora</span>${text}`;
+  if (role === "bot") d.innerHTML = `<span class="bot-name">Autora</span>${text}`;
   else d.textContent = text;
   container.appendChild(d);
   container.scrollTop = container.scrollHeight;
@@ -942,192 +895,143 @@ async function sendChat() {
   if (!state.token) return toast("Activate trial first");
   input.value = "";
   addMsg("user", message);
-  state.history.push({ role: "user", content: message });
+  state.history.push({role:"user", content:message});
   try {
-    const data = await api("/api/chat", { method: "POST", body: JSON.stringify({ message, history: state.history }) });
+    const data = await api("/api/chat", {method:"POST", body:JSON.stringify({message, history:state.history})});
     addMsg("bot", data.reply);
-    state.history.push({ role: "assistant", content: data.reply });
+    state.history.push({role:"assistant", content:data.reply});
     state.usage = data.usage;
-    renderSettings();
-  } catch (e) {
-    addMsg("bot", "Error: " + e.message);
-  }
+    renderTopStatus();
+  } catch(e){ addMsg("bot","Error: "+e.message); }
 }
 
-function startPulsePoll() {
+function startPulsePoll(){
   clearInterval(state.pulseTimer);
-  state.pulseTimer = setInterval(async () => {
-    if (!state.token || !state.usage) return;
-    try { await api("/api/pulse"); } catch {}
-  }, 5000);
+  state.pulseTimer = setInterval(async()=>{
+    if(!state.token||!state.usage) return;
+    try{ await api("/api/pulse"); }catch{}
+  },5000);
 }
-function stopPulsePoll() { clearInterval(state.pulseTimer); }
+function stopPulsePoll(){ clearInterval(state.pulseTimer); }
 
-// ===== DROPDOWN TOGGLES =====
-$$(".dropdown-header").forEach(header => {
-  header.onclick = () => {
-    const targetId = header.dataset.dropdown;
-    const content = document.getElementById(targetId);
-    const arrow = header.querySelector(".arrow");
-    if (content) {
-      content.classList.toggle("open");
-      if (arrow) arrow.classList.toggle("open");
+// ===== AUTH =====
+$("#signupBtn").onclick = async () => {
+  const name = $("#signupName").value.trim();
+  const email = $("#signupEmail").value.trim();
+  if (!name) return showAuthError("Please enter your name");
+  if (!email) return showAuthError("Please enter your email");
+  try {
+    await activate(email, name);
+    showAuthSuccess(`Welcome, ${name}! Trial activated.`);
+    setTimeout(() => showScreen("home-screen"), 600);
+  } catch(e){ showAuthError(e.message); }
+};
+$("#loginBtn").onclick = async () => {
+  const email = $("#loginEmail").value.trim();
+  if (!email) return showAuthError("Please enter your email");
+  try {
+    await resumeTrial(email);
+    showAuthSuccess("Logged in! Trial resumed.");
+    setTimeout(() => showScreen("home-screen"), 600);
+  } catch(e){ showAuthError(e.message); }
+};
+$("#signupEmail").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#signupBtn").click(); });
+$("#loginEmail").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#loginBtn").click(); });
+
+$$("[data-auth]").forEach(tab=>tab.onclick=function(){
+  $$("[data-auth]").forEach(t=>t.classList.remove("active"));
+  this.classList.add("active");
+  const t=this.dataset.auth;
+  $("#authSignup").classList.toggle("hidden",t!=="signup");
+  $("#authLogin").classList.toggle("hidden",t!=="login");
+  hideAuthMessages();
+});
+function showAuthError(msg){ $("#authError").textContent=msg; $("#authError").style.display="block"; $("#authSuccess").style.display="none"; }
+function showAuthSuccess(msg){ $("#authSuccess").textContent=msg; $("#authSuccess").style.display="block"; $("#authError").style.display="none"; }
+function hideAuthMessages(){ $("#authError").style.display="none"; $("#authSuccess").style.display="none"; }
+
+// ===== MENU =====
+$("#menuToggle").onclick = openMenu;
+$("#chatMenuToggle").onclick = openMenu;
+$("#closeMenu").onclick = closeMenu;
+$("#menuOverlay").onclick = closeMenu;
+
+// ===== MENU ACTIONS =====
+$$(".menu-item[data-action]").forEach(item=>{
+  item.onclick=function(){
+    $$(".menu-item").forEach(i=>i.classList.remove("active"));
+    this.classList.add("active");
+    const a=this.dataset.action;
+    closeMenu();
+    switch(a){
+      case "home": showScreen("home-screen"); break;
+      case "chat": showScreen("chat-screen"); break;
+      case "sync": showScreen("backup-screen"); break;
+      case "runbooks": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Runbooks:\n\nScheduled automation tasks. Tell me:\n• What to automate\n• How often (e.g. daily:02:00)\n• Any instructions"),300); break;
+      case "memory": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Long Memory:\n\nI remember business facts. Say: `Remember: my VPS is at 100.64.x.x`\nSaved facts help me give better answers."),300); break;
+      case "scraper": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Lead Scraper:\n\nTo scrape leads, provide:\n• Description (e.g. roofing companies)\n• Location (e.g. Manchester, UK)\n• How many results\n\nTry: `Scrape 25 roofing companies in Austin, TX`"),300); break;
+      case "devices": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Your Devices:\nNo devices saved yet. Use Connect to add one."),300); break;
+      case "health": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Heartbeat: "+(state.usage?.heartbeatEnabled?"Active":"Off")+"\nConfigure in Settings."),300); break;
+      case "settings": toggleSettings(true); break;
+      case "backup": showScreen("backup-screen"); break;
+      case "pricing": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Pricing:\n\n• Trial: 6h free · 25 scrapes\n• Starter: $19/mo · 300 chats · 150 scrapes\n• Growth: $39/mo · 1,000 chats · 600 scrapes\n• Business: $79/mo (best)\n• Empire: $149/mo"),300); break;
+      case "logout": clearSession(); showScreen("auth-screen"); break;
     }
   };
 });
 
-// ===== DROPDOWN ACTIONS =====
-$$(".dropdown-item[data-action]").forEach(item => {
-  item.onclick = () => {
-    const action = item.dataset.action;
-    $$(".dropdown-item").forEach(i => i.classList.remove("active"));
-    item.classList.add("active");
+// ===== HOME BUTTONS =====
+$("#startChatBtn").onclick=()=>{ if(!state.token) showScreen("auth-screen"); else showScreen("chat-screen"); };
+$("#syncSystemBtn").onclick=()=>{ if(!state.token) showScreen("auth-screen"); else showScreen("backup-screen"); };
+$("#chatSettingsBtn").onclick=()=>toggleSettings(true);
+$("#topSettingsBtn").onclick=()=>toggleSettings(true);
+$("#backupBackBtn").onclick=()=>showScreen("home-screen");
+$("#backupBackBtn2").onclick=()=>showScreen("home-screen");
+$("#backupProceedBtn").onclick=async()=>{ if(!state.token) showScreen("auth-screen"); else { showScreen("chat-screen"); addMsg("bot","Backups checked. Ready to go."); } };
+$("#closeSettingsBtn").onclick=()=>toggleSettings(false);
+$("#settingsOverlay").onclick=()=>toggleSettings(false);
 
-    switch (action) {
-      case "chat":
-        handleStartChat();
-        break;
-      case "suggestions":
-        handleStartChat();
-        setTimeout(() => {
-          const suggestions = document.querySelector(".welcome-suggestions");
-          if (suggestions) suggestions.scrollIntoView({ behavior: "smooth" });
-        }, 300);
-        break;
-      case "clear-chat":
-        clearChat();
-        break;
-      case "sync":
-        showScreen("backup-screen");
-        break;
-      case "devices":
-        handleStartChat();
-        setTimeout(() => addMsg("bot", "Your devices:\nNo devices saved yet. Use the Connect page to add one.\n\nOnce saved, I can help manage them here."), 300);
-        break;
-      case "health":
-        handleStartChat();
-        setTimeout(() => addMsg("bot", "Heartbeat monitoring:\n\n• Status: " + (state.usage?.heartbeatEnabled ? "Active" : "Off") + "\n• Interval: " + (state.usage?.heartbeatMinutes || "—") + " minutes\n\nConfigure in Settings."), 300);
-        break;
-      case "runbooks":
-        handleStartChat();
-        setTimeout(() => addMsg("bot", "Runbooks:\nScheduled automation tasks.\n\nTo create one, tell me:\n• What task to automate\n• How often (daily:02:00 or every:30m)\n• Any special instructions"), 300);
-        break;
-      case "memory":
-        handleStartChat();
-        setTimeout(() => addMsg("bot", "Long Memory:\n\nI can remember business facts, device details, and preferences.\n\nJust say: `Remember: my VPS is at 100.64.x.x, Ubuntu 22.04`\n\nSaved memories help me give better answers."), 300);
-        break;
-      case "scraper":
-        handleStartChat();
-        setTimeout(() => addMsg("bot", "Lead Scraper:\n\nTo scrape leads, provide:\n• Description (e.g., roofing companies)\n• Location (e.g., Manchester, UK)\n• How many results\n\nTry: `Scrape 25 roofing companies in Austin, TX with phones and emails`"), 300);
-        break;
-      case "settings":
-        toggleSettings(true);
-        break;
-      case "backup":
-        showScreen("backup-screen");
-        break;
-      case "pricing":
-        handleStartChat();
-        setTimeout(() => addMsg("bot", "Pricing:\n\n• Trial: 6 hours free · 25 scrapes\n• Starter: $19/mo · 300 chats · 150 scrapes\n• Growth: $39/mo · 1,000 chats · 600 scrapes\n• Business: $79/mo (best) · 3,000 chats · 2,500 scrapes\n• Empire: $149/mo · 10,000 chats · 10,000 scrapes\n\nMore in Settings."), 300);
-        break;
-      default:
-        handleStartChat();
-    }
-  };
+// ===== CHAT =====
+$("#sendBtn").onclick=sendChat;
+$("#chatInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault(); sendChat();}
+  setTimeout(()=>{e.target.style.height="auto"; e.target.style.height=Math.min(e.target.scrollHeight,120)+"px";},0);
 });
+$("#attachBtn").onclick=()=>toast("File attachment coming soon");
+$$("[data-q]").forEach(b=>b.onclick=()=>{$("#chatInput").value=b.dataset.q; sendChat();});
 
-function handleStartChat() {
-  if (!state.token) {
-    const email = prompt("Enter your email for free trial:");
-    if (!email) return;
-    activate(email).then(() => {
-      showScreen("chat-screen");
-      addMsg("bot", "Welcome to Autora AI! I'm ready. What can I help you with?");
-    }).catch(e => alert(e.message));
-  } else {
-    showScreen("chat-screen");
-  }
-}
-
-function clearChat() {
-  state.history = [];
-  $("#chatMessages").innerHTML = `
-    <div class="welcome-message" id="welcomeMsg">
-      <div class="welcome-icon"><svg class="icn-28" style="color:var(--accent)"><use href="#i-sparkle"/></svg></div>
-      <h3>How can I help you today?</h3>
-      <p>System control, monitoring, automation — all from your phone.</p>
-      <div class="welcome-suggestions">
-        <button data-q="Check my system status and give me a summary."><svg><use href="#i-chart"/></svg> Status</button>
-        <button data-q="Show me a server health checklist."><svg><use href="#i-check"/></svg> Health</button>
-        <button data-q="Help me automate daily backup verification."><svg><use href="#i-cloud"/></svg> Backups</button>
-        <button data-q="Connect my Linux server via SSH."><svg><use href="#i-plug"/></svg> Connect</button>
-      </div>
-    </div>
-  `;
-  $$("[data-q]").forEach(b => b.onclick = () => {
-    $("#chatInput").value = b.dataset.q;
-    sendChat();
-  });
-  toast("Chat cleared");
-}
-
-// ===== MAIN BINDINGS =====
-$("#startChatBtn").onclick = handleStartChat;
-$("#syncSystemBtn").onclick = () => showScreen("backup-screen");
-$("#backupBackBtn").onclick = () => showScreen("home-screen");
-$("#backupProceedBtn").onclick = async () => {
-  if (!state.token) {
-    const email = prompt("Enter your email for free trial:");
-    if (!email) return;
-    try { await activate(email); showScreen("chat-screen"); addMsg("bot", "Backups checked. Systems ready. How can I help?"); }
-    catch (e) { alert(e.message); }
-  } else { showScreen("chat-screen"); addMsg("bot", "Backups verified. Let's keep things running."); }
+// ===== SETTINGS =====
+$("#testBackendBtn").onclick=async()=>{
+  state.backend=norm($("#settingsBackend").value); saveLocal();
+  try{ const d=await api("/api/health"); toast(d.ok?"Backend online":"Backend issue"); $("#settingsDebug").textContent=JSON.stringify(d,null,2); $("#settingsDebug").style.display="block"; }
+  catch(e){ toast("Failed: "+e.message); $("#settingsDebug").textContent=e.message; $("#settingsDebug").style.display="block"; }
 };
-$("#sendBtn").onclick = sendChat;
-$("#chatInput").addEventListener("keydown", e => {
-  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChat(); }
-  setTimeout(() => { e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px"; }, 0);
-});
-$("#attachBtn").onclick = () => toast("File attachment coming soon");
-$$("[data-q]").forEach(b => b.onclick = () => { $("#chatInput").value = b.dataset.q; sendChat(); });
-
-$("#homeBtn").onclick = () => showScreen("home-screen");
-$("#settingsBtn").onclick = () => toggleSettings(true);
-$("#sidebarHomeBtn").onclick = () => showScreen("home-screen");
-$("#sidebarSettingsBtn").onclick = () => toggleSettings(true);
-$("#sidebarTrialBtn").onclick = () => {
-  const email = prompt("Enter your email for free trial:");
-  if (email) activate(email).then(() => toast("Activated!")).catch(e => alert(e.message));
+$("#refreshUsageBtn").onclick=async()=>{
+  if(!state.token) return toast("Activate first");
+  try{ const me=await api("/api/me"); state.usage=me.usage; renderSettings(); renderTopStatus(); toast("Refreshed"); }
+  catch(e){ toast(e.message); }
 };
-$("#closeSettingsBtn").onclick = () => toggleSettings(false);
-$("#settingsOverlay").onclick = () => toggleSettings(false);
-
-$("#testBackendBtn").onclick = async () => {
-  const url = norm($("#settingsBackend").value);
-  state.backend = url; saveLocal();
-  try { const d = await api("/api/health"); toast(d.ok ? "Backend online" : "Backend issue"); $("#settingsDebug").textContent = JSON.stringify(d, null, 2); $("#settingsDebug").style.display = "block"; }
-  catch (e) { toast("Failed: " + e.message); $("#settingsDebug").textContent = e.message; $("#settingsDebug").style.display = "block"; }
+$("#clearChatBtn").onclick=()=>{
+  state.history=[];
+  $("#chatMessages").innerHTML=`<div class="welcome-message" id="welcomeMsg"><div class="welcome-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1m15.5-7.5l-4.2 4.2M9.7 14.3l-4.2 4.2m0-12.4l4.2 4.2m4.6 4.6l4.2 4.2"/></svg></div><h3>How can I help you today?</h3><p>System control, monitoring, automation — all from your phone.</p><div class="welcome-suggestions"><button data-q="Check my system status and give me a summary.">Status</button><button data-q="Show me a server health checklist.">Health</button><button data-q="Help me automate daily backup verification.">Backups</button><button data-q="Connect my Linux server via SSH.">Connect</button></div></div>`;
+  $$("[data-q]").forEach(b=>b.onclick=()=>{$("#chatInput").value=b.dataset.q; sendChat();});
+  toast("Cleared"); toggleSettings(false);
 };
-$("#activateBtnSettings").onclick = async () => {
-  const email = $("#settingsEmail").value.trim();
-  if (!email) return toast("Enter an email");
-  try { await activate(email); toast("Trial activated!"); } catch (e) { toast("Failed: " + e.message); }
-};
-$("#clearChatBtn").onclick = () => { clearChat(); toggleSettings(false); };
-$("#logoutBtnSettings").onclick = () => { clearSession(); toggleSettings(false); showScreen("home-screen"); };
-$$(".toggle").forEach(t => t.onclick = function () { this.classList.toggle("on"); const label = this.closest(".settings-row")?.querySelector(".left b")?.textContent || "setting"; toast("Toggled " + label); });
+$("#logoutBtnSettings").onclick=()=>{ clearSession(); toggleSettings(false); showScreen("auth-screen"); };
+$$(".toggle").forEach(t=>t.onclick=function(){this.classList.toggle("on"); toast("Toggled "+this.closest(".settings-row")?.querySelector(".left b")?.textContent||"setting");});
 
 // ===== INIT =====
-(async function init() {
-  state.backend = norm(state.backend);
-  $("#settingsBackend").value = state.backend;
-  $("#settingsEmail").value = state.email || "";
+(async function init(){
+  state.backend=norm(state.backend);
+  $("#settingsBackend").value=state.backend;
   await fingerprint();
-  renderSettings();
-  if (state.token) {
-    try { const me = await api("/api/me"); state.usage = me.usage; renderSettings(); }
-    catch { state.token = ""; saveLocal(); }
+  if(state.token){
+    try{ const me=await api("/api/me"); state.usage=me.usage; renderSettings(); renderTopStatus(); }
+    catch{ state.token=""; saveLocal(); }
+  } else {
+    renderTopStatus();
   }
+  if(state.token) showScreen("home-screen");
 })();
 </script>
 </body>
