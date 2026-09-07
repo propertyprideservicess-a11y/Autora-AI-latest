@@ -8,94 +8,19 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{
     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,system-ui,sans-serif;
-    background:#ffffff;
-    color:#1e293b;
-    min-height:100vh;
+    background:#ffffff;color:#1e293b;min-height:100vh;
   }
-
-  /* ===== SCREENS ===== */
   .screen{display:none;min-height:100vh;flex-direction:column}
   .screen.active{display:flex}
 
-  /* ===== AUTH SCREEN ===== */
-  #auth-screen{
-    align-items:center;justify-content:center;
-    background:linear-gradient(135deg,#f8fafc 0%,#eff6ff 50%,#f0f9ff 100%);
-    padding:24px;
-    min-height:100vh;
-  }
-  .auth-card{
-    max-width:440px;width:100%;
-    background:#ffffff;
-    border:1px solid #e2e8f0;
-    border-radius:24px;
-    padding:40px 36px 36px;
-    box-shadow:0 20px 60px rgba(0,0,0,.04),0 1px 3px rgba(0,0,0,.02);
-    text-align:center;
-  }
-  .auth-logo{
-    width:56px;height:56px;border-radius:16px;
-    background:linear-gradient(135deg,#3b82f6,#2563eb);
-    display:flex;align-items:center;justify-content:center;
-    font-weight:800;font-size:22px;color:#fff;
-    margin:0 auto 20px;
-    box-shadow:0 4px 16px rgba(37,99,235,.2);
-  }
-  .auth-card h1{font-size:26px;font-weight:800;margin-bottom:6px;color:#0f172a}
-  .auth-card .subtitle{color:#64748b;font-size:14px;margin-bottom:24px;line-height:1.5}
-  .auth-tabs{
-    display:flex;gap:0;margin-bottom:24px;
-    border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;
-  }
-  .auth-tab{
-    flex:1;padding:12px;border:none;background:#f8fafc;color:#64748b;
-    font-weight:600;font-size:14px;cursor:pointer;transition:all .12s;
-  }
-  .auth-tab.active{background:#ffffff;color:#2563eb;box-shadow:inset 0 2px 0 #2563eb}
-  .auth-tab:first-child{border-right:1px solid #e2e8f0}
-  .auth-field{
-    margin-bottom:16px;text-align:left;
-  }
-  .auth-field label{
-    display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px;
-  }
-  .auth-field input{
-    width:100%;padding:12px 14px;border-radius:12px;
-    background:#f8fafc;border:1px solid #e2e8f0;
-    color:#0f172a;font:inherit;font-size:14px;outline:none;transition:all .12s;
-  }
-  .auth-field input:focus{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(59,130,246,.08)}
-  .auth-btn{
-    width:100%;padding:14px;border-radius:12px;
-    background:linear-gradient(135deg,#3b82f6,#2563eb);
-    color:#fff;font-weight:700;font-size:15px;border:none;cursor:pointer;
-    box-shadow:0 4px 14px rgba(37,99,235,.2);transition:all .15s;
-    margin-top:8px;
-  }
-  .auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.25)}
-  .auth-card .terms{
-    font-size:12px;color:#94a3b8;margin-top:16px;
-  }
-  .auth-error{
-    color:#ef4444;font-size:13px;margin-bottom:12px;display:none;
-  }
-  .auth-success{
-    color:#22c55e;font-size:13px;margin-bottom:12px;display:none;
-  }
-  .auth-divider{height:1px;background:#e2e8f0;margin:20px 0}
-
-  /* ===== HOME ===== */
-  #home-screen{background:#ffffff}
-
+  /* Topbar */
   .topbar{
     display:flex;align-items:center;justify-content:space-between;
-    padding:14px 24px;
-    border-bottom:1px solid #eef2f6;
-    background:#ffffff;
-    position:sticky;top:0;z-index:20;
+    padding:14px 24px;border-bottom:1px solid #eef2f6;
+    background:#ffffff;position:sticky;top:0;z-index:20;
   }
   .topbar-left{display:flex;align-items:center;gap:14px}
-  .topbar-left .logo-small{
+  .topbar-left .logo-sm{
     width:34px;height:34px;border-radius:10px;
     background:linear-gradient(135deg,#3b82f6,#2563eb);
     display:flex;align-items:center;justify-content:center;
@@ -103,17 +28,13 @@
   }
   .topbar-left h2{font-size:17px;font-weight:700;color:#0f172a}
   .topbar-right{display:flex;align-items:center;gap:8px}
-
   .hamburger{
     width:38px;height:38px;border-radius:10px;padding:0;
     display:flex;align-items:center;justify-content:center;
     background:#f8fafc;border:1px solid #e2e8f0;
     cursor:pointer;color:#64748b;font-size:18px;transition:all .12s;
-    font-weight:600;
   }
   .hamburger:hover{background:#e2e8f0;color:#0f172a}
-  .hamburger.active{background:#eff6ff;color:#2563eb;border-color:#bfdbfe}
-
   .btn-icon{
     width:38px;height:38px;border-radius:10px;padding:0;
     display:flex;align-items:center;justify-content:center;
@@ -121,54 +42,39 @@
     cursor:pointer;color:#64748b;font-size:16px;transition:all .12s;
   }
   .btn-icon:hover{background:#e2e8f0;color:#0f172a}
-
   .btn{
     padding:12px 24px;border-radius:12px;font-weight:600;font-size:14px;
     cursor:pointer;border:none;transition:all .15s;
     display:inline-flex;align-items:center;gap:8px;
   }
-  .btn-primary{
-    background:#2563eb;color:#fff;
-    box-shadow:0 4px 14px rgba(37,99,235,.2);
-  }
+  .btn-primary{background:#2563eb;color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.2);}
   .btn-primary:hover{background:#1d4ed8;transform:translateY(-1px)}
-  .btn-secondary{
-    background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;
-  }
+  .btn-secondary{background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;}
   .btn-secondary:hover{background:#e2e8f0}
-  .btn-ghost{
-    background:transparent;color:#64748b;border:1px solid #e2e8f0;
-  }
+  .btn-ghost{background:transparent;color:#64748b;border:1px solid #e2e8f0;}
   .btn-ghost:hover{background:#f8fafc;color:#334155}
   .btn-sm{padding:10px 16px;font-size:13px;border-radius:10px}
+  .btn-danger{background:#ef4444;color:#fff;}
+  .btn-danger:hover{background:#dc2626}
 
-  /* ===== SIDE MENU (slide in) ===== */
+  /* Side menu */
   .menu-overlay{
-    position:fixed;inset:0;z-index:45;
-    background:rgba(0,0,0,.2);
-    display:none;
+    position:fixed;inset:0;z-index:45;background:rgba(0,0,0,.2);display:none;
   }
   .menu-overlay.open{display:block}
-
   .side-menu{
     position:fixed;top:0;left:0;bottom:0;z-index:46;
-    width:300px;background:#ffffff;
-    border-right:1px solid #e2e8f0;
-    padding:24px 16px;
-    overflow-y:auto;
-    transform:translateX(-100%);
-    transition:transform .25s ease;
+    width:300px;background:#ffffff;border-right:1px solid #e2e8f0;
+    padding:24px 16px;overflow-y:auto;
+    transform:translateX(-100%);transition:transform .25s ease;
     box-shadow:4px 0 30px rgba(0,0,0,.06);
   }
   .side-menu.open{transform:translateX(0)}
-
   .side-menu-header{
     display:flex;align-items:center;justify-content:space-between;
     padding-bottom:20px;border-bottom:1px solid #eef2f6;margin-bottom:16px;
   }
-  .side-menu-header .logo-area{
-    display:flex;align-items:center;gap:12px;
-  }
+  .side-menu-header .logo-area{display:flex;align-items:center;gap:12px}
   .side-menu-header .logo-area .mlogo{
     width:36px;height:36px;border-radius:10px;
     background:linear-gradient(135deg,#3b82f6,#2563eb);
@@ -182,7 +88,6 @@
     display:flex;align-items:center;justify-content:center;
   }
   .side-menu-header .close-menu:hover{background:#e2e8f0;color:#0f172a}
-
   .menu-section{margin-bottom:6px}
   .menu-section-title{
     font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.6px;
@@ -192,69 +97,42 @@
     display:flex;align-items:center;gap:12px;
     padding:10px 12px;border-radius:10px;width:100%;
     border:none;background:transparent;color:#475569;
-    font-size:14px;font-weight:500;cursor:pointer;text-align:left;
-    transition:all .1s;
+    font-size:14px;font-weight:500;cursor:pointer;text-align:left;transition:all .1s;
   }
   .menu-item:hover{background:#f1f5f9;color:#0f172a}
   .menu-item.active{background:#eff6ff;color:#2563eb;font-weight:600}
   .menu-item .mi-icon{font-size:16px;width:24px;text-align:center}
+  .side-menu .menu-footer{margin-top:24px;padding-top:16px;border-top:1px solid #eef2f6}
 
-  .side-menu .menu-footer{
-    margin-top:24px;padding-top:16px;
-    border-top:1px solid #eef2f6;
-  }
-
-  /* ===== HOME CONTENT ===== */
+  /* Home content */
   .home-content{
     display:flex;align-items:center;justify-content:center;
     padding:60px 24px 40px;
-    background:
-      radial-gradient(800px 400px at 30% 40%,rgba(59,130,246,.03),transparent 60%),
-      radial-gradient(600px 300px at 70% 60%,rgba(37,99,235,.02),transparent 50%),
-      #ffffff;
+    background:radial-gradient(800px 400px at 30% 40%,rgba(59,130,246,.03),transparent 60%),
+                radial-gradient(600px 300px at 70% 60%,rgba(37,99,235,.02),transparent 50%),#ffffff;
     min-height:calc(100vh - 62px);
   }
   .home-card{
-    max-width:620px;width:100%;
-    background:#ffffff;
-    border:1px solid #e2e8f0;
-    border-radius:24px;
-    padding:44px 40px 38px;
-    text-align:center;
+    max-width:620px;width:100%;background:#ffffff;
+    border:1px solid #e2e8f0;border-radius:24px;
+    padding:44px 40px 38px;text-align:center;
     box-shadow:0 20px 60px rgba(0,0,0,.03);
   }
-  .home-card h1{
-    font-size:30px;font-weight:800;margin-bottom:16px;line-height:1.2;
-    color:#0f172a;
-  }
+  .home-card h1{font-size:30px;font-weight:800;margin-bottom:16px;line-height:1.2;color:#0f172a}
   .home-card h1 span{color:#2563eb}
-  .home-text{
-    font-size:15px;line-height:1.7;color:#475569;margin-bottom:8px;
-  }
+  .home-text{font-size:15px;line-height:1.7;color:#475569;margin-bottom:8px}
   .home-text strong{color:#1e293b}
-  .home-divider{
-    height:1px;background:linear-gradient(90deg,transparent,#e2e8f0,transparent);
-    margin:24px 0;
-  }
-  .home-buttons{
-    display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
-  }
-  .home-pills{
-    display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:18px 0 4px;
-  }
-  .pill{
-    font-size:11px;padding:5px 10px;border-radius:999px;
-    background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;
-  }
+  .home-divider{height:1px;background:linear-gradient(90deg,transparent,#e2e8f0,transparent);margin:24px 0}
+  .home-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .home-pills{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:18px 0 4px}
+  .pill{font-size:11px;padding:5px 10px;border-radius:999px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
 
-  /* ===== CHAT ===== */
+  /* Chat */
   #chat-screen{background:#ffffff}
   .chat-header{
     display:flex;align-items:center;justify-content:space-between;
-    padding:14px 24px;
-    border-bottom:1px solid #eef2f6;
-    background:#ffffff;
-    position:sticky;top:0;z-index:10;
+    padding:14px 24px;border-bottom:1px solid #eef2f6;
+    background:#ffffff;position:sticky;top:0;z-index:10;
   }
   .chat-header-left{display:flex;align-items:center;gap:14px}
   .chat-header-left .ch-logo{
@@ -272,8 +150,7 @@
   .chat-body{
     flex:1;display:flex;flex-direction:column;
     max-width:820px;width:100%;margin:0 auto;
-    padding:0 24px;
-    height:calc(100vh - 62px);
+    padding:0 24px;height:calc(100vh - 62px);
   }
   .chat-messages{
     flex:1;overflow-y:auto;padding:24px 0 8px;
@@ -283,96 +160,132 @@
   .chat-messages::-webkit-scrollbar-track{background:transparent}
   .chat-messages::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:99px}
   .welcome-message{
-    text-align:center;padding:80px 20px 40px;flex:1;
+    text-align:center;padding:60px 20px 30px;flex:1;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
   }
   .welcome-message .welcome-icon{
     width:64px;height:64px;border-radius:18px;
     background:linear-gradient(135deg,#eff6ff,#dbeafe);
     display:flex;align-items:center;justify-content:center;
-    margin-bottom:20px;
-    border:1px solid #bfdbfe;
+    font-size:24px;margin-bottom:20px;border:1px solid #bfdbfe;
+    color:#2563eb;font-weight:800;
   }
   .welcome-message h3{font-size:22px;font-weight:700;margin-bottom:8px;color:#0f172a}
-  .welcome-message p{color:#64748b;font-size:14px;max-width:360px;line-height:1.6}
-  .welcome-suggestions{
-    display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px;
-  }
+  .welcome-message p{color:#64748b;font-size:14px;max-width:400px;line-height:1.6}
+  .welcome-suggestions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px}
   .welcome-suggestions button{
     padding:8px 14px;border-radius:999px;border:1px solid #e2e8f0;
-    background:#f8fafc;color:#475569;font-size:13px;
-    cursor:pointer;transition:all .12s;
+    background:#f8fafc;color:#475569;font-size:13px;cursor:pointer;transition:all .12s;
   }
-  .welcome-suggestions button:hover{
-    background:#eff6ff;border-color:#bfdbfe;color:#2563eb;
-  }
+  .welcome-suggestions button:hover{background:#eff6ff;border-color:#bfdbfe;color:#2563eb}
   .msg{
     max-width:85%;padding:12px 16px;border-radius:16px;
     line-height:1.55;font-size:14px;white-space:pre-wrap;word-break:break-word;
     animation:fadeIn .2s ease;
   }
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-  .msg.user{
-    align-self:flex-end;
-    background:#eff6ff;border:1px solid #bfdbfe;color:#1e293b;
-  }
-  .msg.bot{
-    align-self:flex-start;
-    background:#f8fafc;border:1px solid #e2e8f0;
-  }
-  .msg.bot .bot-name{
-    font-size:11px;font-weight:600;color:#2563eb;margin-bottom:4px;display:block;
-  }
-  .chat-input-area{
-    padding:12px 0 20px;
-    border-top:1px solid #eef2f6;
-    background:#ffffff;
-  }
+  .msg.user{align-self:flex-end;background:#eff6ff;border:1px solid #bfdbfe;color:#1e293b}
+  .msg.bot{align-self:flex-start;background:#f8fafc;border:1px solid #e2e8f0}
+  .msg.bot .bot-name{font-size:11px;font-weight:600;color:#2563eb;margin-bottom:4px;display:block}
+
+  /* Chat input */
+  .chat-input-area{padding:12px 0 20px;border-top:1px solid #eef2f6;background:#ffffff}
   .chat-input-wrap{
     display:flex;align-items:flex-end;gap:10px;
-    background:#f8fafc;
-    border:1px solid #e2e8f0;
-    border-radius:14px;padding:8px 8px 8px 18px;
-    transition:border-color .15s;
+    background:#f8fafc;border:1px solid #e2e8f0;
+    border-radius:14px;padding:8px 8px 8px 18px;transition:border-color .15s;
   }
-  .chat-input-wrap:focus-within{
-    border-color:#93c5fd;
-    box-shadow:0 0 0 3px rgba(59,130,246,.08);
-  }
+  .chat-input-wrap:focus-within{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(59,130,246,.08)}
   .chat-input-wrap textarea{
     flex:1;background:transparent;border:none;outline:none;
     color:#0f172a;font:inherit;font-size:14px;
     resize:none;max-height:120px;padding:6px 0;line-height:1.4;
   }
   .chat-input-wrap textarea::placeholder{color:#94a3b8}
-  .chat-input-actions{
-    display:flex;align-items:center;gap:6px;
-  }
+  .chat-input-actions{display:flex;align-items:center;gap:6px}
   .chat-input-actions button{
     width:36px;height:36px;border-radius:10px;border:none;
     background:transparent;color:#94a3b8;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    transition:all .12s;
+    display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .12s;
   }
   .chat-input-actions button:hover{background:#e2e8f0;color:#475569}
   .chat-input-actions .send-btn{
     background:#2563eb;color:#fff;
     width:36px;height:36px;border-radius:10px;
     box-shadow:0 2px 8px rgba(37,99,235,.15);
+    display:flex;align-items:center;justify-content:center;
   }
   .chat-input-actions .send-btn:hover{background:#1d4ed8;transform:scale(1.04)}
+  .chat-input-actions .send-btn svg{width:16px;height:16px}
 
-  /* ===== SETTINGS ===== */
-  .settings-overlay{
-    position:fixed;inset:0;z-index:50;
-    background:rgba(0,0,0,.3);
-    display:none;animation:fadeIn .15s;
+  /* Backup page */
+  #backup-screen{background:#f4f6fa}
+  .backup-container{flex:1;display:flex;align-items:center;justify-content:center;padding:24px}
+  .backup-card{
+    max-width:720px;width:100%;background:#ffffff;border:1px solid #e2e8f0;
+    border-radius:24px;padding:38px 34px;box-shadow:0 12px 40px rgba(0,0,0,.04);
   }
-  .settings-overlay.open{display:block}
+  .backup-card h2{font-size:24px;margin-bottom:18px;color:#0f172a;display:flex;align-items:center;gap:12px}
+  .backup-card p{color:#475569;line-height:1.7;margin-bottom:14px;font-size:14px}
+  .backup-card ul{list-style:none;padding:0;margin:12px 0 20px}
+  .backup-card ul li{padding:10px 0 10px 28px;border-bottom:1px solid #f1f5f9;position:relative;color:#334155;font-size:14px}
+  .backup-card ul li::before{content:'OK';position:absolute;left:0;color:#22c55e;font-weight:700;font-size:11px}
+  .cloud-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+  .cloud-item{
+    padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;
+    transition:all .12s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px;
+  }
+  .cloud-item:hover{background:#eff6ff;border-color:#bfdbfe;transform:translateY(-1px)}
+  .cloud-item b{color:#0f172a;font-size:14px}
+  .cloud-item span{font-size:12px;color:#64748b}
+
+  /* Status page */
+  .status-content{padding:32px 24px;max-width:900px;margin:0 auto;width:100%}
+  .status-content h2{font-size:24px;font-weight:700;margin-bottom:6px;color:#0f172a}
+  .status-content .sub{color:#64748b;font-size:14px;margin-bottom:24px}
+  .status-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .status-card{
+    padding:20px;border-radius:16px;border:1px solid #e2e8f0;
+    background:#ffffff;transition:all .12s;
+  }
+  .status-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.04)}
+  .status-card .s-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .status-card .s-name{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+  .status-card .s-badge{font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600}
+  .status-card .s-badge.green{background:#dcfce7;color:#166534}
+  .status-card .s-badge.yellow{background:#fef9c3;color:#854d0e}
+  .status-card .s-badge.red{background:#fee2e2;color:#991b1b}
+  .status-card .s-detail{font-size:13px;color:#64748b;line-height:1.5}
+  .status-card .s-link{font-size:12px;color:#2563eb;margin-top:8px;display:inline-block;text-decoration:none}
+  .status-card .s-link:hover{text-decoration:underline}
+  .status-note{margin-top:24px;padding:16px 20px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;font-size:13px;color:#64748b;line-height:1.6}
+  .status-note a{color:#2563eb;text-decoration:none}
+  .status-note a:hover{text-decoration:underline}
+
+  /* Auth overlay */
+  .auth-panel{
+    position:fixed;top:0;right:0;bottom:0;z-index:46;
+    width:400px;background:#ffffff;border-left:1px solid #e2e8f0;
+    padding:28px 24px;overflow-y:auto;
+    transform:translateX(100%);transition:transform .25s ease;
+    box-shadow:-4px 0 30px rgba(0,0,0,.06);
+  }
+  .auth-panel.open{transform:translateX(0)}
+  .auth-tab{flex:1;padding:12px;border:none;background:#f8fafc;color:#64748b;font-weight:600;font-size:14px;cursor:pointer;transition:all .12s}
+  .auth-tab.active{background:#ffffff;color:#2563eb}
+  .auth-field{margin-bottom:14px}
+  .auth-field label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px}
+  .auth-field input{
+    width:100%;padding:12px 14px;border-radius:12px;
+    background:#f8fafc;border:1px solid #e2e8f0;
+    color:#0f172a;font:inherit;font-size:14px;outline:none;transition:all .12s;
+  }
+  .auth-field input:focus{border-color:#93c5fd;box-shadow:0 0 0 3px rgba(59,130,246,.08)}
+
+  /* Settings panel */
   .settings-panel{
     position:fixed;top:0;right:0;bottom:0;z-index:51;
-    width:min(400px,100vw);background:#ffffff;
-    border-left:1px solid #e2e8f0;
+    width:min(400px,100vw);background:#ffffff;border-left:1px solid #e2e8f0;
     padding:24px 20px;overflow-y:auto;
     display:none;animation:slideIn .2s ease;
     box-shadow:-8px 0 30px rgba(0,0,0,.04);
@@ -384,7 +297,7 @@
     display:flex;align-items:center;justify-content:space-between;
   }
   .settings-panel h3 button{
-    background:transparent;border:none;color:#94a3b8;cursor:pointer;padding:4px 8px;border-radius:8px;
+    background:transparent;border:none;color:#94a3b8;font-size:20px;cursor:pointer;padding:4px 8px;border-radius:8px;
   }
   .settings-panel h3 button:hover{background:#f1f5f9;color:#0f172a}
   .settings-group{margin-bottom:24px}
@@ -424,9 +337,7 @@
     border:none;cursor:pointer;margin-top:8px;transition:all .12s;
   }
   .settings-btn:hover{background:#1d4ed8}
-  .settings-btn.outline{
-    background:transparent;border:1px solid #e2e8f0;color:#475569;
-  }
+  .settings-btn.outline{background:transparent;border:1px solid #e2e8f0;color:#475569}
   .settings-btn.outline:hover{background:#f8fafc;color:#0f172a;border-color:#cbd5e1}
   .status-badge{
     display:inline-flex;align-items:center;gap:6px;
@@ -446,74 +357,30 @@
   .hidden{display:none!important}
 
   @media(max-width:600px){
-    .side-menu{width:100%}
+    .side-menu,.auth-panel{width:100%}
     .home-content{padding:40px 16px}
     .home-card{padding:28px 20px}
     .home-card h1{font-size:24px}
-    .auth-card{padding:28px 20px}
-    .chat-body{height:calc(100vh - 58px);padding:0 12px}
+    .status-grid,.cloud-list{grid-template-columns:1fr}
+    .chat-body{padding:0 12px}
+    .backup-card{padding:24px 18px}
     .settings-panel{width:100%}
   }
 </style>
 </head>
 <body>
 
-<!-- ===== AUTH SCREEN ===== -->
-<div id="auth-screen" class="screen active">
-  <div class="auth-card">
-    <div class="auth-logo">A</div>
-    <h1>Welcome to Autora AI</h1>
-    <p class="subtitle">Sign up for a free trial — 6 hours of full access, 25 scrapes, no credit card.</p>
-
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-auth="signup">Sign Up</button>
-      <button class="auth-tab" data-auth="login">Log In</button>
-    </div>
-
-    <div class="auth-error" id="authError"></div>
-    <div class="auth-success" id="authSuccess"></div>
-
-    <div id="authSignup">
-      <div class="auth-field">
-        <label>Full name</label>
-        <input id="signupName" placeholder="John Smith" />
-      </div>
-      <div class="auth-field">
-        <label>Email address</label>
-        <input id="signupEmail" type="email" placeholder="you@business.com" />
-      </div>
-      <div class="auth-field">
-        <label>Company (optional)</label>
-        <input id="signupCompany" placeholder="Your company name" />
-      </div>
-      <button class="auth-btn" id="signupBtn">Start 6-Hour Free Trial</button>
-    </div>
-
-    <div id="authLogin" class="hidden">
-      <div class="auth-field">
-        <label>Email address</label>
-        <input id="loginEmail" type="email" placeholder="you@business.com" />
-      </div>
-      <button class="auth-btn" id="loginBtn">Log In &amp; Resume Trial</button>
-      <p style="font-size:13px;color:#64748b;margin-top:12px">We'll look up your existing trial by email + device fingerprint.</p>
-    </div>
-
-    <div class="auth-divider"></div>
-    <p class="terms">No credit card needed. Trial is locked to your device for security.</p>
-  </div>
-</div>
-
 <!-- ===== HOME SCREEN ===== -->
-<div id="home-screen" class="screen">
+<div id="home-screen" class="screen active">
   <div class="topbar">
     <div class="topbar-left">
-      <button class="hamburger" id="menuToggle">MENU</button>
-      <div class="logo-small">A</div>
+      <button class="hamburger" id="menuToggle">|||</button>
+      <div class="logo-sm">A</div>
       <h2>Autora AI</h2>
     </div>
     <div class="topbar-right">
-      <span class="status-badge" id="topStatus">Not active</span>
-      <button class="btn-icon" id="topSettingsBtn">S</button>
+      <span class="status-badge" id="homeStatusBadge" style="display:none">Active</span>
+      <button class="btn-icon" id="topAuthBtn" title="Sign in">User</button>
     </div>
   </div>
 
@@ -526,32 +393,30 @@
       </div>
       <button class="close-menu" id="closeMenu">X</button>
     </div>
-
     <div class="menu-section">
       <div class="menu-section-title">Main</div>
-      <button class="menu-item active" data-action="home"><span class="mi-icon">[H]</span> Home</button>
-      <button class="menu-item" data-action="chat"><span class="mi-icon">[C]</span> Chat</button>
-      <button class="menu-item" data-action="sync"><span class="mi-icon">[S]</span> Sync System</button>
+      <button class="menu-item active" data-action="home">Home</button>
+      <button class="menu-item" data-action="chat">Chat</button>
+      <button class="menu-item" data-action="status">AI Status</button>
+      <button class="menu-item" data-action="sync">Sync System</button>
     </div>
-
     <div class="menu-section">
       <div class="menu-section-title">Tools</div>
-      <button class="menu-item" data-action="runbooks"><span class="mi-icon">[R]</span> Runbooks</button>
-      <button class="menu-item" data-action="memory"><span class="mi-icon">[M]</span> Memory</button>
-      <button class="menu-item" data-action="scraper"><span class="mi-icon">[L]</span> Lead Scraper</button>
-      <button class="menu-item" data-action="devices"><span class="mi-icon">[D]</span> My Devices</button>
-      <button class="menu-item" data-action="health"><span class="mi-icon">[+]</span> Heartbeat</button>
+      <button class="menu-item" data-action="runbooks">Runbooks</button>
+      <button class="menu-item" data-action="memory">Memory</button>
+      <button class="menu-item" data-action="scraper">Lead Scraper</button>
+      <button class="menu-item" data-action="devices">My Devices</button>
+      <button class="menu-item" data-action="health">Heartbeat</button>
     </div>
-
     <div class="menu-section">
       <div class="menu-section-title">Account</div>
-      <button class="menu-item" data-action="settings"><span class="mi-icon">[*]</span> Settings</button>
-      <button class="menu-item" data-action="backup"><span class="mi-icon">[B]</span> Backups</button>
-      <button class="menu-item" data-action="pricing"><span class="mi-icon">[$]</span> Pricing</button>
+      <button class="menu-item" id="menuAuthBtn" data-action="auth">Sign In / Sign Up</button>
+      <button class="menu-item" data-action="settings">Settings</button>
+      <button class="menu-item" data-action="backup">Backups</button>
+      <button class="menu-item" data-action="pricing">Pricing</button>
     </div>
-
-    <div class="menu-footer">
-      <button class="menu-item" data-action="logout" style="color:#ef4444"><span class="mi-icon">[!]</span> Log out</button>
+    <div class="menu-footer" id="menuFooter" style="display:none">
+      <button class="menu-item" data-action="logout" style="color:#ef4444">Log out</button>
     </div>
   </div>
 
@@ -574,108 +439,146 @@
       </div>
       <div class="home-divider"></div>
       <div class="home-buttons">
-        <button class="btn btn-primary" id="startChatBtn">Start Chat</button>
-        <button class="btn btn-secondary" id="syncSystemBtn">Sync System</button>
+        <button class="btn btn-primary" id="startChatBtn">Try Chat</button>
+        <button class="btn btn-secondary" id="statusBtn">AI Status</button>
+        <button class="btn btn-secondary" id="syncBtn">Sync System</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== BACKUP ===== -->
+<!-- ===== AI STATUS ===== -->
+<div id="status-screen" class="screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" id="statusMenuToggle">|||</button>
+      <div class="logo-sm">A</div>
+      <h2>AI Status</h2>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-icon" id="statusHomeBtn" title="Home">Home</button>
+    </div>
+  </div>
+  <div class="status-content">
+    <h2>Live AI Provider Status</h2>
+    <p class="sub">Real-time status from official sources. Updated every 5 minutes.</p>
+    <div class="status-grid">
+      <div class="status-card">
+        <div class="s-header">
+          <div class="s-name">OpenAI / ChatGPT</div>
+          <span class="s-badge green" id="openaiBadge">Operational</span>
+        </div>
+        <div class="s-detail" id="openaiDetail">All systems operational. 99.94% API uptime.</div>
+        <a class="s-link" href="https://status.openai.com" target="_blank" rel="noopener">status.openai.com →</a>
+      </div>
+      <div class="status-card">
+        <div class="s-header">
+          <div class="s-name">Anthropic / Claude</div>
+          <span class="s-badge green" id="claudeBadge">Operational</span>
+        </div>
+        <div class="s-detail" id="claudeDetail">All systems operational. 99.4% uptime.</div>
+        <a class="s-link" href="https://status.claude.com" target="_blank" rel="noopener">status.claude.com →</a>
+      </div>
+      <div class="status-card">
+        <div class="s-header">
+          <div class="s-name">Google Cloud / Gemini</div>
+          <span class="s-badge green" id="googleBadge">Operational</span>
+        </div>
+        <div class="s-detail" id="googleDetail">No broad severe incidents.</div>
+        <a class="s-link" href="https://status.cloud.google.com" target="_blank" rel="noopener">status.cloud.google.com →</a>
+      </div>
+      <div class="status-card">
+        <div class="s-header">
+          <div class="s-name">Aggregate Trackers</div>
+          <span class="s-badge green">Live</span>
+        </div>
+        <div class="s-detail">Cross-provider dashboards for 17+ AI services.</div>
+        <a class="s-link" href="https://isyouraiddown.com" target="_blank" rel="noopener">isyouraiddown.com →</a><br/>
+        <a class="s-link" href="https://aidownstatus.com" target="_blank" rel="noopener">aidownstatus.com →</a>
+      </div>
+    </div>
+    <div class="status-note">
+      <strong>Note:</strong> If you're experiencing issues with ChatGPT, Claude, or another AI tool, check the official status pages first. Providers usually post incidents there before social media catches up.<br/><br/>
+      <strong>Recent incidents (Sep 2026):</strong> OpenAI elevated errors (resolved), Claude Mythos 5.1 model issues (resolved).<br/><br/>
+      Sources: <a href="https://status.openai.com" target="_blank" rel="noopener">OpenAI</a> · <a href="https://status.claude.com" target="_blank" rel="noopener">Claude</a> · <a href="https://status.cloud.google.com" target="_blank" rel="noopener">Google Cloud</a> · <a href="https://isyouraiddown.com" target="_blank" rel="noopener">IsYourAIDown</a> · <a href="https://aidownstatus.com" target="_blank" rel="noopener">AIDownStatus</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BACKUP SCREEN ===== -->
 <div id="backup-screen" class="screen">
   <div class="topbar">
     <div class="topbar-left">
-      <button class="btn btn-ghost btn-sm" id="backupBackBtn2" style="font-size:14px">&larr; Back</button>
-      <h2 style="font-size:16px;font-weight:600">Backup Safety</h2>
+      <button class="hamburger" id="backupMenuToggle">|||</button>
+      <div class="logo-sm">A</div>
+      <h2>Backup Safety</h2>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-icon" id="backupHomeBtn" title="Home">Home</button>
     </div>
   </div>
-  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:24px">
-    <div class="backup-card" style="max-width:720px;width:100%;background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:38px 34px;box-shadow:0 12px 40px rgba(0,0,0,.04)">
-      <h2 style="font-size:24px;margin-bottom:18px;color:#0f172a">Backup First — Safety Matters</h2>
-      <p style="color:#475569;line-height:1.7;margin-bottom:14px;font-size:14px">
-        Before connecting any system to Autora, we <strong>strongly recommend</strong> ensuring your devices have proper backups.
-        This protects your data against accidental changes, hardware failure, or unexpected issues during remote operations.
-      </p>
-      <p style="color:#475569;line-height:1.7;margin-bottom:14px;font-size:14px">
-        Backups can be done <strong>locally</strong> (external drive, NAS) or in the <strong>cloud</strong>.
-        Here are trusted cloud backup providers:
-      </p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0">
-        <a class="cloud-item" href="https://backblaze.com" target="_blank" rel="noopener" style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;transition:all .12s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px">
-          <b style="color:#0f172a;font-size:14px">Backblaze</b>
-          <span style="font-size:12px;color:#64748b">Unlimited cloud backup · $9/mo</span>
-        </a>
-        <a class="cloud-item" href="https://www.backblaze.com/cloud-backup" target="_blank" rel="noopener" style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;transition:all .12s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px">
-          <b style="color:#0f172a;font-size:14px">B2 Cloud Storage</b>
-          <span style="font-size:12px;color:#64748b">$0.006/GB/mo · Server-friendly</span>
-        </a>
-        <a class="cloud-item" href="https://idrive.com" target="_blank" rel="noopener" style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;transition:all .12s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px">
-          <b style="color:#0f172a;font-size:14px">IDrive</b>
-          <span style="font-size:12px;color:#64748b">5TB for $79/yr · Multi-platform</span>
-        </a>
-        <a class="cloud-item" href="https://rsync.net" target="_blank" rel="noopener" style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;transition:all .12s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px">
-          <b style="color:#0f172a;font-size:14px">rsync.net</b>
-          <span style="font-size:12px;color:#64748b">Enterprise · SSH · From $0.04/GB/mo</span>
-        </a>
+  <div class="backup-container">
+    <div class="backup-card">
+      <h2>Backup First — Safety Matters</h2>
+      <p>Before connecting any system to Autora, we <strong>strongly recommend</strong> ensuring your devices have proper backups. This protects your data against accidental changes, hardware failure, or unexpected issues during remote operations.</p>
+      <p>Backups can be done <strong>locally</strong> (external drive, NAS) or in the <strong>cloud</strong>. Here are trusted cloud backup providers:</p>
+      <div class="cloud-list">
+        <a class="cloud-item" href="https://backblaze.com" target="_blank" rel="noopener"><b>Backblaze</b><span>Unlimited cloud backup · $9/mo</span></a>
+        <a class="cloud-item" href="https://www.backblaze.com/cloud-backup" target="_blank" rel="noopener"><b>B2 Cloud Storage</b><span>$0.006/GB/mo · Server-friendly</span></a>
+        <a class="cloud-item" href="https://idrive.com" target="_blank" rel="noopener"><b>IDrive</b><span>5TB for $79/yr · Multi-platform</span></a>
+        <a class="cloud-item" href="https://rsync.net" target="_blank" rel="noopener"><b>rsync.net</b><span>Enterprise · SSH · From $0.04/GB/mo</span></a>
       </div>
-      <ul style="list-style:none;padding:0;margin:12px 0 20px">
-        <li style="padding:10px 0 10px 28px;border-bottom:1px solid #f1f5f9;position:relative;color:#334155;font-size:14px">&check; Every system should have verified, restorable backups</li>
-        <li style="padding:10px 0 10px 28px;border-bottom:1px solid #f1f5f9;position:relative;color:#334155;font-size:14px">&check; Test a restore — not just a backup "success" message</li>
-        <li style="padding:10px 0 10px 28px;border-bottom:1px solid #f1f5f9;position:relative;color:#334155;font-size:14px">&check; 3-2-1 rule: 3 copies, 2 media types, 1 offsite</li>
-        <li style="padding:10px 0 10px 28px;position:relative;color:#334155;font-size:14px">&check; Autora helps automate backup checks with Runbooks</li>
+      <ul>
+        <li>Every system should have verified, restorable backups</li>
+        <li>Test a restore — not just a backup "success" message</li>
+        <li>3-2-1 rule: 3 copies, 2 media types, 1 offsite</li>
+        <li>Autora helps automate backup checks with Runbooks</li>
       </ul>
       <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-        <button class="btn btn-primary" id="backupProceedBtn">I have backups — proceed</button>
-        <button class="btn btn-ghost" id="backupBackBtn">&larr; Go back</button>
+        <button class="btn btn-primary" id="backupChatBtn">I have backups — go to chat</button>
+        <button class="btn btn-ghost" id="backupHomeBtn2">Go home</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== CHAT ===== -->
+<!-- ===== CHAT SCREEN ===== -->
 <div id="chat-screen" class="screen">
   <div class="chat-header">
     <div class="chat-header-left">
-      <button class="hamburger" id="chatMenuToggle">MENU</button>
+      <button class="hamburger" id="chatMenuToggle">|||</button>
       <div class="ch-logo">A</div>
       <h2>Autora AI <span class="status-dot"></span></h2>
     </div>
     <div class="chat-header-right">
-      <button class="btn-icon" id="chatSettingsBtn">S</button>
+      <button class="btn-icon" id="chatSettingsBtn" title="Settings">Gear</button>
+      <button class="btn-icon" id="chatHomeBtn" title="Home">Home</button>
     </div>
   </div>
   <div class="chat-body">
     <div class="chat-messages" id="chatMessages">
       <div class="welcome-message" id="welcomeMsg">
-        <div class="welcome-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 1v6m0 10v6m11-11h-6M7 12H1m15.5-7.5l-4.2 4.2M9.7 14.3l-4.2 4.2m0-12.4l4.2 4.2m4.6 4.6l4.2 4.2"/>
-          </svg>
-        </div>
-        <h3>How can I help you today?</h3>
-        <p>System control, monitoring, automation — all from your phone.</p>
+        <div class="welcome-icon">AI</div>
+        <h3>Explore freely — chat when you're ready</h3>
+        <p>You can browse everything. When you want to chat, just sign up free — 6 hours, no credit card.</p>
         <div class="welcome-suggestions">
-          <button data-q="Check my system status and give me a summary.">Status</button>
-          <button data-q="Show me a server health checklist.">Health</button>
-          <button data-q="Help me automate daily backup verification.">Backups</button>
-          <button data-q="Connect my Linux server via SSH.">Connect</button>
+          <button data-q="What can Autora do for my business?">What can you do?</button>
+          <button data-q="How do I connect my devices?">Connect devices</button>
+          <button data-q="Tell me about the pricing plans.">Pricing</button>
+          <button data-q="Show me a server health checklist.">Health check</button>
+        </div>
+        <div style="margin-top:20px">
+          <button class="btn btn-primary" id="chatSignInBtn">Sign in to start chatting</button>
         </div>
       </div>
     </div>
     <div class="chat-input-area">
       <div class="chat-input-wrap">
-        <textarea id="chatInput" rows="1" placeholder="Ask Autora anything..."></textarea>
+        <textarea id="chatInput" rows="1" placeholder="Sign in to chat..."></textarea>
         <div class="chat-input-actions">
-          <button id="attachBtn" title="Attach file">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-            </svg>
-          </button>
+          <button id="attachBtn" title="Attach file">Attach</button>
           <button class="send-btn" id="sendBtn" title="Send">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-            </svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
       </div>
@@ -683,8 +586,34 @@
   </div>
 </div>
 
-<!-- ===== SETTINGS ===== -->
-<div class="settings-overlay" id="settingsOverlay"></div>
+<!-- ===== AUTH OVERLAY ===== -->
+<div class="menu-overlay" id="authOverlay"></div>
+<div class="auth-panel" id="authPanel">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+    <h3 style="font-size:20px;font-weight:700">Sign In / Sign Up</h3>
+    <button class="close-menu" id="closeAuth">X</button>
+  </div>
+  <div id="authError" style="color:#ef4444;font-size:13px;margin-bottom:12px;display:none"></div>
+  <div id="authSuccess" style="color:#22c55e;font-size:13px;margin-bottom:12px;display:none"></div>
+  <div style="display:flex;gap:0;margin-bottom:20px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden">
+    <button class="auth-tab active" data-authtab="signup">Sign Up</button>
+    <button class="auth-tab" data-authtab="login" style="border-left:1px solid #e2e8f0">Log In</button>
+  </div>
+  <div id="authSignup">
+    <div class="auth-field"><label>Name</label><input id="authName" placeholder="John Smith" /></div>
+    <div class="auth-field"><label>Email</label><input id="authEmail" type="email" placeholder="you@business.com" /></div>
+    <button class="btn btn-primary" style="width:100%;padding:14px;font-size:15px;margin-top:4px" id="authSignupBtn">Start 6-Hour Free Trial</button>
+    <p style="font-size:12px;color:#94a3b8;margin-top:12px;text-align:center">No credit card needed · Locked to your device</p>
+  </div>
+  <div id="authLogin" class="hidden">
+    <div class="auth-field"><label>Email</label><input id="authLoginEmail" type="email" placeholder="you@business.com" /></div>
+    <button class="btn btn-primary" style="width:100%;padding:14px;font-size:15px;margin-top:4px" id="authLoginBtn">Log In and Resume Trial</button>
+    <p style="font-size:13px;color:#64748b;margin-top:12px;text-align:center">We'll find your existing trial by email + device.</p>
+  </div>
+</div>
+
+<!-- ===== SETTINGS OVERLAY ===== -->
+<div class="menu-overlay" id="settingsOverlay"></div>
 <div class="settings-panel" id="settingsPanel">
   <h3>Settings <button id="closeSettingsBtn">X</button></h3>
   <div class="settings-group">
@@ -737,6 +666,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ===== STATE =====
 const DEFAULT_BACKEND = localStorage.getItem("autora_backend") || "https://9a4830b7558ba018-82-132-220-16.serveousercontent.com";
 const state = {
   backend: DEFAULT_BACKEND,
@@ -747,8 +677,9 @@ const state = {
   usage: null,
   history: [],
   pulseTimer: null,
-  settingsOpen: false,
-  menuOpen: false
+  menuOpen: false,
+  authOpen: false,
+  settingsOpen: false
 };
 
 const $ = s => document.querySelector(s);
@@ -756,11 +687,9 @@ const $$ = s => [...document.querySelectorAll(s)];
 
 function showScreen(id) {
   $$(".screen").forEach(s => s.classList.remove("active"));
-  const el = document.getElementById(id);
-  if (el) el.classList.add("active");
-  if (id === "chat-screen") startPulsePoll();
-  else stopPulsePoll();
-  closeMenu();
+  document.getElementById(id).classList.add("active");
+  if (id === "chat-screen") startPulsePoll(); else stopPulsePoll();
+  closeMenu(); closeAuth(); closeSettings();
 }
 
 function toast(msg, ms = 2800) {
@@ -787,7 +716,7 @@ function saveLocal() {
 function clearSession() {
   state.token=""; state.usage=null; state.history=[];
   localStorage.removeItem("autora_token");
-  renderSettings(); renderTopStatus();
+  renderAuthState();
   toast("Logged out");
 }
 function norm(u){return String(u||"").trim().replace(/\/$/,"")}
@@ -797,46 +726,29 @@ function msClock(ms){
   return `${Math.floor(s/3600)}h ${Math.floor((s%3600)/60)}m ${s%60}s`;
 }
 
-function renderTopStatus(){
-  const u=state.usage;
-  const el=$("#topStatus");
-  if(u&&(u.trialOpen||u.plan!=="trial")){
-    if(u.plan==="trial") el.textContent=`Trial · ${msClock(u.msLeft)}`;
-    else el.textContent=`${u.planMeta?.name||u.plan}`;
-    el.className="status-badge";
-  } else if(u){
-    el.textContent="Expired"; el.className="status-badge";
+function renderAuthState() {
+  const signedIn = !!state.token && !!state.usage;
+  const footer = $("#menuFooter");
+  const authBtn = $("#menuAuthBtn");
+  const topBtn = $("#topAuthBtn");
+  const badge = $("#homeStatusBadge");
+  if (signedIn) {
+    footer.style.display = "block";
+    authBtn.textContent = "User " + (state.name || state.email);
+    topBtn.textContent = "User";
+    if (state.usage?.plan === "trial" && state.usage?.trialOpen) {
+      badge.style.display = "inline-flex";
+      badge.textContent = "Trial " + msClock(state.usage.msLeft);
+    } else if (state.usage) {
+      badge.style.display = "inline-flex";
+      badge.textContent = (state.usage.planMeta?.name || state.usage.plan);
+    }
   } else {
-    el.textContent="Not active"; el.className="status-badge";
+    footer.style.display = "none";
+    authBtn.textContent = "Sign In / Sign Up";
+    topBtn.textContent = "User";
+    badge.style.display = "none";
   }
-}
-function renderSettings(){
-  const u=state.usage;
-  const el=$("#settingsPlan");
-  if(u&&(u.trialOpen||u.plan!=="trial")) el.textContent=u.plan==="trial"?`Trial · ${msClock(u.msLeft)}`:`${u.planMeta?.name||u.plan}`;
-  else if(u) el.textContent="Expired";
-  else el.textContent="Not activated";
-  el.className="status-badge";
-  $("#settingsEmail").value=state.email||"";
-  $("#settingsBackend").value=state.backend;
-}
-
-function toggleSettings(open){
-  state.settingsOpen=open!==undefined?open:!state.settingsOpen;
-  $("#settingsOverlay").classList.toggle("open",state.settingsOpen);
-  $("#settingsPanel").classList.toggle("open",state.settingsOpen);
-  if(state.settingsOpen) renderSettings();
-}
-
-function openMenu(){
-  state.menuOpen=true;
-  $("#sideMenu").classList.add("open");
-  $("#menuOverlay").classList.add("open");
-}
-function closeMenu(){
-  state.menuOpen=false;
-  $("#sideMenu").classList.remove("open");
-  $("#menuOverlay").classList.remove("open");
 }
 
 async function api(path, opts={}) {
@@ -845,7 +757,7 @@ async function api(path, opts={}) {
   if (state.token) headers.Authorization = `Bearer ${state.token}`;
   let r;
   try { r = await fetch(state.backend+path, {...opts, headers}); }
-  catch { throw new Error("Cannot reach backend — check tunnel/URL/CORS"); }
+  catch { throw new Error("Cannot reach backend -- check tunnel/URL/CORS"); }
   const data = await r.json().catch(()=>({}));
   if (!r.ok) throw new Error(data.error?.message||data.error||data.message||r.statusText);
   return data;
@@ -854,13 +766,12 @@ async function api(path, opts={}) {
 async function activate(email, name) {
   email = String(email||"").trim().toLowerCase();
   if (!email||!email.includes("@")) throw new Error("Valid email required");
-  state.email = email;
-  state.name = name || "";
+  state.email = email; state.name = name || "";
   const fp = await fingerprint();
-  const data = await api("/api/trial/start", {method:"POST", body:JSON.stringify({email, fingerprint:fp})});
+  const data = await api("/api/trial/start", {method:"POST", body:JSON.stringify({email, fingerprint:fp, name:state.name})});
   state.token = data.token; state.usage = data.usage; saveLocal();
-  renderSettings(); renderTopStatus();
-  toast(data.resumed? "Trial resumed" : "Trial activated");
+  renderAuthState();
+  toast(data.resumed? "Welcome back!" : "Trial activated!");
   return data;
 }
 
@@ -871,8 +782,8 @@ async function resumeTrial(email) {
   const fp = await fingerprint();
   const data = await api("/api/trial/start", {method:"POST", body:JSON.stringify({email, fingerprint:fp})});
   state.token = data.token; state.usage = data.usage; saveLocal();
-  renderSettings(); renderTopStatus();
-  toast(data.resumed? "Welcome back" : "Trial activated");
+  renderAuthState();
+  toast(data.resumed? "Welcome back!" : "Trial activated!");
   return data;
 }
 
@@ -892,7 +803,7 @@ async function sendChat() {
   const input = $("#chatInput");
   const message = input.value.trim();
   if (!message) return;
-  if (!state.token) return toast("Activate trial first");
+  if (!state.token || !state.usage) { toast("Please sign in first"); openAuth(); return; }
   input.value = "";
   addMsg("user", message);
   state.history.push({role:"user", content:message});
@@ -901,7 +812,7 @@ async function sendChat() {
     addMsg("bot", data.reply);
     state.history.push({role:"assistant", content:data.reply});
     state.usage = data.usage;
-    renderTopStatus();
+    renderAuthState();
   } catch(e){ addMsg("bot","Error: "+e.message); }
 }
 
@@ -914,124 +825,143 @@ function startPulsePoll(){
 }
 function stopPulsePoll(){ clearInterval(state.pulseTimer); }
 
-// ===== AUTH =====
-$("#signupBtn").onclick = async () => {
-  const name = $("#signupName").value.trim();
-  const email = $("#signupEmail").value.trim();
-  if (!name) return showAuthError("Please enter your name");
-  if (!email) return showAuthError("Please enter your email");
-  try {
-    await activate(email, name);
-    showAuthSuccess(`Welcome, ${name}! Trial activated.`);
-    setTimeout(() => showScreen("home-screen"), 600);
-  } catch(e){ showAuthError(e.message); }
-};
-$("#loginBtn").onclick = async () => {
-  const email = $("#loginEmail").value.trim();
-  if (!email) return showAuthError("Please enter your email");
-  try {
-    await resumeTrial(email);
-    showAuthSuccess("Logged in! Trial resumed.");
-    setTimeout(() => showScreen("home-screen"), 600);
-  } catch(e){ showAuthError(e.message); }
-};
-$("#signupEmail").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#signupBtn").click(); });
-$("#loginEmail").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#loginBtn").click(); });
-
-$$("[data-auth]").forEach(tab=>tab.onclick=function(){
-  $$("[data-auth]").forEach(t=>t.classList.remove("active"));
-  this.classList.add("active");
-  const t=this.dataset.auth;
-  $("#authSignup").classList.toggle("hidden",t!=="signup");
-  $("#authLogin").classList.toggle("hidden",t!=="login");
-  hideAuthMessages();
-});
-function showAuthError(msg){ $("#authError").textContent=msg; $("#authError").style.display="block"; $("#authSuccess").style.display="none"; }
-function showAuthSuccess(msg){ $("#authSuccess").textContent=msg; $("#authSuccess").style.display="block"; $("#authError").style.display="none"; }
-function hideAuthMessages(){ $("#authError").style.display="none"; $("#authSuccess").style.display="none"; }
-
 // ===== MENU =====
+function openMenu(){ state.menuOpen=true; $("#sideMenu").classList.add("open"); $("#menuOverlay").classList.add("open"); }
+function closeMenu(){ state.menuOpen=false; $("#sideMenu").classList.remove("open"); $("#menuOverlay").classList.remove("open"); }
 $("#menuToggle").onclick = openMenu;
 $("#chatMenuToggle").onclick = openMenu;
+$("#statusMenuToggle").onclick = openMenu;
+$("#backupMenuToggle").onclick = openMenu;
 $("#closeMenu").onclick = closeMenu;
 $("#menuOverlay").onclick = closeMenu;
+
+// ===== AUTH =====
+function openAuth(){ state.authOpen=true; $("#authPanel").classList.add("open"); $("#authOverlay").classList.add("open"); }
+function closeAuth(){ state.authOpen=false; $("#authPanel").classList.remove("open"); $("#authOverlay").classList.remove("open"); }
+$("#topAuthBtn").onclick = openAuth;
+$("#menuAuthBtn").onclick = ()=>{ if(state.token&&state.usage){ toast("Already signed in"); return; } closeMenu(); openAuth(); };
+$("#chatSignInBtn").onclick = openAuth;
+$("#closeAuth").onclick = closeAuth;
+$("#authOverlay").onclick = closeAuth;
+
+$$("[data-authtab]").forEach(tab=>tab.onclick=function(){
+  $$("[data-authtab]").forEach(t=>{t.classList.remove("active"); t.style.background="#f8fafc"; t.style.color="#64748b"});
+  this.classList.add("active"); this.style.background="#ffffff"; this.style.color="#2563eb";
+  const t=this.dataset.authtab;
+  $("#authSignup").classList.toggle("hidden",t!=="signup");
+  $("#authLogin").classList.toggle("hidden",t!=="login");
+  $("#authError").style.display="none"; $("#authSuccess").style.display="none";
+});
+$("#authSignupBtn").onclick = async()=>{
+  const name=$("#authName").value.trim();
+  const email=$("#authEmail").value.trim();
+  if(!name) return showAuthError("Enter your name");
+  if(!email) return showAuthError("Enter your email");
+  try{ await activate(email, name); showAuthSuccess("Trial activated!"); closeAuth(); showScreen("chat-screen"); addMsg("bot","Welcome! I'm ready. Try asking me something."); }
+  catch(e){ showAuthError(e.message); }
+};
+$("#authLoginBtn").onclick = async()=>{
+  const email=$("#authLoginEmail").value.trim();
+  if(!email) return showAuthError("Enter your email");
+  try{ await resumeTrial(email); showAuthSuccess("Logged in!"); closeAuth(); showScreen("chat-screen"); addMsg("bot","Welcome back!"); }
+  catch(e){ showAuthError(e.message); }
+};
+function showAuthError(msg){ $("#authError").textContent=msg; $("#authError").style.display="block"; $("#authSuccess").style.display="none"; }
+function showAuthSuccess(msg){ $("#authSuccess").textContent=msg; $("#authSuccess").style.display="block"; $("#authError").style.display="none"; }
+
+// ===== SETTINGS =====
+function openSettings(){ state.settingsOpen=true; $("#settingsPanel").classList.add("open"); $("#settingsOverlay").classList.add("open"); renderSettings(); }
+function closeSettings(){ state.settingsOpen=false; $("#settingsPanel").classList.remove("open"); $("#settingsOverlay").classList.remove("open"); }
+$("#chatSettingsBtn").onclick = openSettings;
+$("#closeSettingsBtn").onclick = closeSettings;
+$("#settingsOverlay").onclick = closeSettings;
+
+function renderSettings(){
+  const u=state.usage;
+  const el=$("#settingsPlan");
+  if(u&&(u.trialOpen||u.plan!=="trial")) el.textContent=u.plan==="trial"?`Trial ${msClock(u.msLeft)}`:u.planMeta?.name||u.plan;
+  else if(u) el.textContent="Expired";
+  else el.textContent="Not activated";
+  el.className="status-badge";
+  $("#settingsEmail").value=state.email||"";
+  $("#settingsBackend").value=state.backend;
+}
+
+$("#testBackendBtn").onclick = async()=>{
+  state.backend=norm($("#settingsBackend").value); saveLocal();
+  try{ const d=await api("/api/health"); toast(d.ok?"Online":"Issue"); $("#settingsDebug").textContent=JSON.stringify(d,null,2); $("#settingsDebug").style.display="block"; }
+  catch(e){ toast("Error: "+e.message); $("#settingsDebug").textContent=e.message; $("#settingsDebug").style.display="block"; }
+};
+$("#refreshUsageBtn").onclick = async()=>{
+  if(!state.token) return toast("Activate first");
+  try{ const me=await api("/api/me"); state.usage=me.usage; renderSettings(); renderAuthState(); toast("Refreshed"); }
+  catch(e){ toast(e.message); }
+};
+$("#clearChatBtn").onclick = ()=>{
+  state.history=[];
+  $("#chatMessages").innerHTML=`<div class="welcome-message" id="welcomeMsg"><div class="welcome-icon">AI</div><h3>Explore freely — chat when you're ready</h3><p>You can browse everything. When you want to chat, just sign up free — 6 hours, no credit card.</p><div class="welcome-suggestions"><button data-q="What can Autora do for my business?">What can you do?</button><button data-q="How do I connect my devices?">Connect devices</button><button data-q="Tell me about the pricing plans.">Pricing</button><button data-q="Show me a server health checklist.">Health check</button></div><div style="margin-top:20px"><button class="btn btn-primary" id="chatSignInBtn">Sign in to start chatting</button></div></div>`;
+  $("#chatSignInBtn").onclick = openAuth;
+  $$("[data-q]").forEach(b=>b.onclick=()=>{ showScreen("chat-screen"); if(!state.token||!state.usage){ $("#welcomeMsg").classList.remove("hidden"); return; } $("#chatInput").value=b.dataset.q; sendChat(); });
+  toast("Cleared"); closeSettings();
+};
+$("#logoutBtnSettings").onclick = ()=>{ clearSession(); closeSettings(); showScreen("home-screen"); };
+$$(".toggle").forEach(t=>t.onclick=function(){this.classList.toggle("on"); toast("Toggled "+this.closest(".settings-row")?.querySelector(".left b")?.textContent||"setting");});
 
 // ===== MENU ACTIONS =====
 $$(".menu-item[data-action]").forEach(item=>{
   item.onclick=function(){
-    $$(".menu-item").forEach(i=>i.classList.remove("active"));
-    this.classList.add("active");
-    const a=this.dataset.action;
-    closeMenu();
+    const a=this.dataset.action; closeMenu();
     switch(a){
       case "home": showScreen("home-screen"); break;
       case "chat": showScreen("chat-screen"); break;
+      case "status": showScreen("status-screen"); break;
       case "sync": showScreen("backup-screen"); break;
-      case "runbooks": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Runbooks:\n\nScheduled automation tasks. Tell me:\n• What to automate\n• How often (e.g. daily:02:00)\n• Any instructions"),300); break;
-      case "memory": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Long Memory:\n\nI remember business facts. Say: `Remember: my VPS is at 100.64.x.x`\nSaved facts help me give better answers."),300); break;
-      case "scraper": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Lead Scraper:\n\nTo scrape leads, provide:\n• Description (e.g. roofing companies)\n• Location (e.g. Manchester, UK)\n• How many results\n\nTry: `Scrape 25 roofing companies in Austin, TX`"),300); break;
-      case "devices": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Your Devices:\nNo devices saved yet. Use Connect to add one."),300); break;
-      case "health": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Heartbeat: "+(state.usage?.heartbeatEnabled?"Active":"Off")+"\nConfigure in Settings."),300); break;
-      case "settings": toggleSettings(true); break;
+      case "runbooks": showScreen("chat-screen"); if(!state.token||!state.usage){ $("#welcomeMsg").classList.remove("hidden"); return; } addMsg("bot","**Runbooks:**\n\nScheduled automation tasks. Tell me:\n- What to automate\n- How often (e.g. daily:02:00)\n- Any instructions"); break;
+      case "memory": showScreen("chat-screen"); if(!state.token||!state.usage){ $("#welcomeMsg").classList.remove("hidden"); return; } addMsg("bot","**Long Memory:**\n\nI remember business facts. Say: Remember: my VPS is at 100.64.x.x\nSaved facts help me give better answers."); break;
+      case "scraper": showScreen("chat-screen"); if(!state.token||!state.usage){ $("#welcomeMsg").classList.remove("hidden"); return; } addMsg("bot","**Lead Scraper:**\n\nTo scrape leads, provide:\n- Description (e.g. roofing companies)\n- Location (e.g. Manchester, UK)\n- How many results\n\nTry: Scrape 25 roofing companies in Austin, TX"); break;
+      case "devices": showScreen("chat-screen"); if(!state.token||!state.usage){ $("#welcomeMsg").classList.remove("hidden"); return; } addMsg("bot","**Your Devices:**\nNo devices saved yet. Use Connect to add one."); break;
+      case "health": showScreen("chat-screen"); if(!state.token||!state.usage){ $("#welcomeMsg").classList.remove("hidden"); return; } addMsg("bot","**Heartbeat:**\n"+(state.usage?.heartbeatEnabled?"Active":"Off")+"\nConfigure in Settings."); break;
+      case "auth": openAuth(); break;
+      case "settings": openSettings(); break;
       case "backup": showScreen("backup-screen"); break;
-      case "pricing": showScreen("chat-screen"); setTimeout(()=>addMsg("bot","Pricing:\n\n• Trial: 6h free · 25 scrapes\n• Starter: $19/mo · 300 chats · 150 scrapes\n• Growth: $39/mo · 1,000 chats · 600 scrapes\n• Business: $79/mo (best)\n• Empire: $149/mo"),300); break;
-      case "logout": clearSession(); showScreen("auth-screen"); break;
+      case "pricing": showScreen("chat-screen"); if(!state.token||!state.usage){ $("#welcomeMsg").classList.remove("hidden"); return; } addMsg("bot","**Pricing:**\n\n- Trial: 6h free - 25 scrapes\n- Starter: $19/mo - 300 chats - 150 scrapes\n- Growth: $39/mo - 1,000 chats - 600 scrapes\n- Business: $79/mo (best)\n- Empire: $149/mo"); break;
+      case "logout": clearSession(); showScreen("home-screen"); break;
     }
   };
 });
 
-// ===== HOME BUTTONS =====
-$("#startChatBtn").onclick=()=>{ if(!state.token) showScreen("auth-screen"); else showScreen("chat-screen"); };
-$("#syncSystemBtn").onclick=()=>{ if(!state.token) showScreen("auth-screen"); else showScreen("backup-screen"); };
-$("#chatSettingsBtn").onclick=()=>toggleSettings(true);
-$("#topSettingsBtn").onclick=()=>toggleSettings(true);
-$("#backupBackBtn").onclick=()=>showScreen("home-screen");
-$("#backupBackBtn2").onclick=()=>showScreen("home-screen");
-$("#backupProceedBtn").onclick=async()=>{ if(!state.token) showScreen("auth-screen"); else { showScreen("chat-screen"); addMsg("bot","Backups checked. Ready to go."); } };
-$("#closeSettingsBtn").onclick=()=>toggleSettings(false);
-$("#settingsOverlay").onclick=()=>toggleSettings(false);
-
-// ===== CHAT =====
-$("#sendBtn").onclick=sendChat;
+// ===== BUTTONS =====
+$("#startChatBtn").onclick = ()=>showScreen("chat-screen");
+$("#statusBtn").onclick = ()=>showScreen("status-screen");
+$("#syncBtn").onclick = ()=>showScreen("backup-screen");
+$("#backupChatBtn").onclick = ()=>{ if(!state.token||!state.usage){ openAuth(); return; } showScreen("chat-screen"); addMsg("bot","Backups checked. Ready to go."); };
+$("#backupHomeBtn").onclick = ()=>showScreen("home-screen");
+$("#backupHomeBtn2").onclick = ()=>showScreen("home-screen");
+$("#statusHomeBtn").onclick = ()=>showScreen("home-screen");
+$("#chatHomeBtn").onclick = ()=>showScreen("home-screen");
+$("#sendBtn").onclick = sendChat;
 $("#chatInput").addEventListener("keydown",e=>{
   if(e.key==="Enter"&&!e.shiftKey){e.preventDefault(); sendChat();}
   setTimeout(()=>{e.target.style.height="auto"; e.target.style.height=Math.min(e.target.scrollHeight,120)+"px";},0);
 });
-$("#attachBtn").onclick=()=>toast("File attachment coming soon");
-$$("[data-q]").forEach(b=>b.onclick=()=>{$("#chatInput").value=b.dataset.q; sendChat();});
+$("#attachBtn").onclick = ()=>toast("File attachment coming soon");
 
-// ===== SETTINGS =====
-$("#testBackendBtn").onclick=async()=>{
-  state.backend=norm($("#settingsBackend").value); saveLocal();
-  try{ const d=await api("/api/health"); toast(d.ok?"Backend online":"Backend issue"); $("#settingsDebug").textContent=JSON.stringify(d,null,2); $("#settingsDebug").style.display="block"; }
-  catch(e){ toast("Failed: "+e.message); $("#settingsDebug").textContent=e.message; $("#settingsDebug").style.display="block"; }
-};
-$("#refreshUsageBtn").onclick=async()=>{
-  if(!state.token) return toast("Activate first");
-  try{ const me=await api("/api/me"); state.usage=me.usage; renderSettings(); renderTopStatus(); toast("Refreshed"); }
-  catch(e){ toast(e.message); }
-};
-$("#clearChatBtn").onclick=()=>{
-  state.history=[];
-  $("#chatMessages").innerHTML=`<div class="welcome-message" id="welcomeMsg"><div class="welcome-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1m15.5-7.5l-4.2 4.2M9.7 14.3l-4.2 4.2m0-12.4l4.2 4.2m4.6 4.6l4.2 4.2"/></svg></div><h3>How can I help you today?</h3><p>System control, monitoring, automation — all from your phone.</p><div class="welcome-suggestions"><button data-q="Check my system status and give me a summary.">Status</button><button data-q="Show me a server health checklist.">Health</button><button data-q="Help me automate daily backup verification.">Backups</button><button data-q="Connect my Linux server via SSH.">Connect</button></div></div>`;
-  $$("[data-q]").forEach(b=>b.onclick=()=>{$("#chatInput").value=b.dataset.q; sendChat();});
-  toast("Cleared"); toggleSettings(false);
-};
-$("#logoutBtnSettings").onclick=()=>{ clearSession(); toggleSettings(false); showScreen("auth-screen"); };
-$$(".toggle").forEach(t=>t.onclick=function(){this.classList.toggle("on"); toast("Toggled "+this.closest(".settings-row")?.querySelector(".left b")?.textContent||"setting");});
+$$("[data-q]").forEach(b=>b.onclick=()=>{
+  showScreen("chat-screen");
+  if(!state.token||!state.usage){ $("#welcomeMsg").classList.remove("hidden"); return; }
+  $("#chatInput").value=b.dataset.q; sendChat();
+});
 
 // ===== INIT =====
 (async function init(){
   state.backend=norm(state.backend);
   $("#settingsBackend").value=state.backend;
   await fingerprint();
+  renderAuthState();
   if(state.token){
-    try{ const me=await api("/api/me"); state.usage=me.usage; renderSettings(); renderTopStatus(); }
+    try{ const me=await api("/api/me"); state.usage=me.usage; renderAuthState(); renderSettings(); }
     catch{ state.token=""; saveLocal(); }
-  } else {
-    renderTopStatus();
   }
-  if(state.token) showScreen("home-screen");
 })();
 </script>
 </body>
